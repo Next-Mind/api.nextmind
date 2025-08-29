@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'frontend_url' => env('FRONTEND_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -122,5 +123,18 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Plataformas aceitas no sistema
+    |--------------------------------------------------------------------------
+    |
+    | Essa configuração armazena o nome das plataformas-cliente do sistema
+    */
+    'trusted_client_platforms' => [
+        'spa',
+        'mobile',
+        'desktop'
+    ]
 
 ];
