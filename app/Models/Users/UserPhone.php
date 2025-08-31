@@ -3,10 +3,13 @@
 namespace App\Models\Users;
 
 use App\Models\User;
+use App\Policies\Users\UserPhonePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 
+#[UsePolicy(UserPhonePolicy::class)]
 class UserPhone extends Model
 {
     use HasUuids, HasFactory;

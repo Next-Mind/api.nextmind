@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,13 +24,16 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = $this->faker;
+        $faker->addProvider(new \Faker\Provider\pt_BR\Person($faker));
+
         $email = fake()->unique()->safeEmail();
         return [
             'name' => fake()->name(),
             'email' => $email,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'cpf' => fake()->cpf(false),
+            'cpf' => $this->faker->cpf(false),
             'birth_date' => fake()->date(),
             'photo_url' => 'https://i.pravatar.cc/300?u='. $email,
             'remember_token' => Str::random(10),
@@ -44,5 +48,32 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    /**
+     * Método responsável por vincular o cargo de estudante ao modelo que foi criado
+     * @return UserFactory
+     */
+    public function withStudentRole()
+    {
+        return $this->afterCreating(fn(User $user)=> $user->assignRole('student'));
+    }
+
+    /**
+     * Método responsável por vincular o cargo de psicólogo ao modelo que foi criado
+     * @return UserFactory
+     */
+    public function withPsychologistRole()
+    {
+        return $this->afterCreating(fn(User $user)=> $user->assignRole('psychologist'));
+    }
+
+    /**
+     * Método responsável por vincular o cargo de administrador ao modelo que foi criado
+     * @return UserFactory
+     */
+    public function withAdminRole()
+    {
+        return $this->afterCreating(fn(User $user)=> $user->assignRole('admin'));
     }
 }

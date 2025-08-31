@@ -9,6 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Users\PsychologistProfile;
+use App\Models\Users\StudentProfile;
 use App\Models\Users\UserAddress;
 use App\Models\Users\UserFile;
 use App\Models\Users\UserPhone;

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Policies\Users\UserPhonePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -27,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
             return (new MailMessage)
                 ->subject('Verifique seu e-mail')
                 ->markdown('emails.verifyEmail', ['url' => $url, 'user' => $notifiable]);
+        });
+
+        Gate::guessPolicyNamesUsing(function (string $userPhone) {
+            return UserPhonePolicy::class;
         });
     }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -45,3 +48,8 @@ function something()
 {
     // ..
 }
+
+beforeAll(function(){
+    $this->seed(PermissionSeeder::class);
+    $this->seed(RoleSeeder::class);
+});
