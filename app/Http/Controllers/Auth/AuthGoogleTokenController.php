@@ -55,6 +55,7 @@ class AuthGoogleTokenController extends Controller
         if($is_new_user){
             UserRegistered::dispatch($user);
             event(new Registered($user));
+            $user->assignRole('student');
         }
 
         return (new UserResource($user))->additional(compact(['is_new_user','token']));

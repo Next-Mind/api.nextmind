@@ -19,11 +19,13 @@ return new class extends Migration
                 ->cascadeOnUpdate();
             $table->string('label');
             $table->string('line1');
-            $table->string('line2');
-            $table->string('district');
+            $table->string('line2')
+                ->nullable();
+            $table->string('district')
+                ->nullable();
             $table->string('city');
             $table->string('state');
-            $table->string('postal_code',8);
+            $table->string('postal_code',12);
             $table->string('country');
             $table->boolean('is_primary');
             $table->timestamps();

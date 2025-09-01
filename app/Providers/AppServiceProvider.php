@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\Users\UserAddressPolicy;
 use App\Policies\Users\UserPhonePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -33,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::guessPolicyNamesUsing(function (string $userPhone) {
             return UserPhonePolicy::class;
+        });
+
+        Gate::guessPolicyNamesUsing(function (string $userAddress) {
+            return UserAddressPolicy::class;
         });
     }
 }

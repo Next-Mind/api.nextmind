@@ -5,6 +5,7 @@ use App\Http\Controllers\Users\MeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthGoogleTokenController;
+use App\Http\Controllers\Users\UserAddressController;
 use App\Http\Controllers\Users\UserPhoneController;
 
 /**
@@ -21,21 +22,27 @@ Route::prefix('/auth/google')->group(function () {
     
 });
 
+//----------------------------------------------------------------------------------------------
 
 /**
  * ROTAS PROTEGIDAS PELO MIDDLEWARE DO SANCTUM
  */
 Route::middleware('auth:sanctum')->group(function(){
     
-    Route::get('/me',[MeController::class,'show'])->middleware('auth:sanctum')->name('users.me');
+    Route::get('users/me',[MeController::class,'show'])->middleware('auth:sanctum')->name('users.me');
 
-    Route::get('/users/phone/{userPhone}',[UserPhoneController::class,'show'])->name('users.phone.show');
-    Route::post('/users/phone',[UserPhoneController::class,'store'])->name('users.phone');
-    Route::put('/users/phone/{userPhone}',[UserPhoneController::class,'update'])->name('users.phone.update');
-    Route::delete('/users/phone/{userPhone}',[UserPhoneController::class,'destroy'])->name('users.phone.destroy');
+    //CRUD DE TELEFONES DO USUÁRIO
+    Route::apiResource('users.phones',UserPhoneController::class)
+        ->scoped(['user' => 'id', 'phone' => 'id']);
+
+    //CRUD DE ENDEREÇOS DO USUÁRIO
+    Route::apiResource('users.addresses',UserAddressController::class)
+        ->scoped(['user' => 'id', 'address' => 'id']);
 });
 
 
+
+//----------------------------------------------------------------------------------------------
 
 
 /**

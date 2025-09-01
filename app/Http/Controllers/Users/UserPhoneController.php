@@ -2,33 +2,25 @@
 
 namespace App\Http\Controllers\Users;
 
-use App\Exceptions\UserPhoneAlreadyRegisteredException;
-use App\Http\Resources\UserPhoneResource;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Users\UpdateUserPhoneRequest;
-use App\Http\Requests\Users\StoreUserPhoneFormRequest;
+use App\Models\User;
 use App\Models\Users\UserPhone;
-use Illuminate\Database\QueryException;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\QueryException;
+use App\Http\Resources\UserPhoneResource;
+use App\Http\Requests\Users\UpdateUserPhoneRequest;
+use App\Http\Requests\Users\StoreUserPhoneFormRequest;
+use App\Exceptions\UserPhoneAlreadyRegisteredException;
 
 class UserPhoneController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserPhoneFormRequest $request)
-    {
-        //RECUPERANDO O USUÁRIO AUTENTICADO E VERIFICANDO SE TEM PERMISSÃO PARA CRIAR UM NOVO REGISTRO
-        $user = Auth::user();
+    public function store(User $user,StoreUserPhoneFormRequest $request)
+    {;
         Gate::authorize('create',$user);
 
         //RECUPERANDO CAMPOS VALIDADOS DA REQUISIÇÃO
@@ -55,33 +47,42 @@ class UserPhoneController extends Controller
 
     }
 
+    public function index(User $user)
+    {
+        /** @noinspection PhpUndefinedMethodInspection */
+        Gate::authorize('viewAny', [UserPhone::class, $user]);
+        $user->load('phones');
+        return UserPhoneResource::collection($user->phones);
+    }
+
     /**
      * Display the specified resource.
      */
-    public function show(UserPhone $userPhone)
+    public function show(User $user, UserPhone $phone)
     {
-        Gate::authorize('view',$userPhone);
-        return new UserPhoneResource($userPhone);
+        Gate::authorize('view',$phone);
+        return new UserPhoneResource($phone);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserPhoneRequest $request, UserPhone $userPhone)
+    public function update(User $user, UserPhone $phone, UpdateUserPhoneRequest $request)
     {
-        Gate::authorize("update",$userPhone);
+        Gate::authorize("update",$phone);
         $input = $request->validated();
-        $userPhone->update($input);
-        return new UserPhoneResource($userPhone);
+        $phone->update($input);
+        return new UserPhoneResource($phone);
         
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserPhone $userPhone)
+    public function destroy(User $user, UserPhone $phone)
     {
-        Gate::authorize("delete",$userPhone);
-        $userPhone->delete();
+        Gate::authorize("delete",$phone);
+        $phone->delete();
+        return response()->noContent();
     }
 }
