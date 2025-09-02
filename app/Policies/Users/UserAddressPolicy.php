@@ -8,12 +8,14 @@ use Illuminate\Auth\Access\Response;
 
 class UserAddressPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+
+    public function viewAny(User $actor, User $owner): bool
     {
-        return false;
+        if ($actor->can('profiles.view.any')) {
+            return true; // admin pode listar de qualquer user
+        }
+        
+        return $actor->can('profiles.view.self') && $actor->is($owner);
     }
 
     /**

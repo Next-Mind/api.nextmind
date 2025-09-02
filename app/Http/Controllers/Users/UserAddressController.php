@@ -15,6 +15,15 @@ use App\Http\Requests\Users\UpdateUserAddressFormRequest;
 
 class UserAddressController extends Controller
 {
+
+    public function index(User $user)
+    {
+        /** @noinspection PhpUndefinedMethodInspection */
+        Gate::authorize('viewAny', [UserAddress::class, $user]);
+        $user->load('phones');
+        return UserAddressResource::collection($user->phones);
+    }
+
     public function show(User $user,UserAddress $address){
         Gate::authorize("view", $address);
         return new UserAddressResource($address);
