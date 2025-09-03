@@ -18,10 +18,9 @@ class UserAddressController extends Controller
 
     public function index(User $user)
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         Gate::authorize('viewAny', [UserAddress::class, $user]);
-        $user->load('phones');
-        return UserAddressResource::collection($user->phones);
+        $user->load('addresses');
+        return UserAddressResource::collection($user->addresses);
     }
 
     public function show(User $user,UserAddress $address){

@@ -22,13 +22,14 @@ class StoreUserAddressFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'label' =>'required|string',
-            'line1' =>'required|string',
-            'line2' =>'required|string',
-            'district' =>'required|string',
+            'label' =>'required|string',
+            'postal_code' =>'required|string',
+            'street' =>'required|string',
+            'number' => 'required',
+            'complement' =>'nullable|string',
+            'neighborhood' =>'required|string',
             'city' =>'required|string',
-            'state' =>'required|string',
-            'postal_code' =>'required',
+            'state' =>'required|string|max:2',
             'country' =>'required|string',
             'is_primary' =>'required|boolean'
         ];

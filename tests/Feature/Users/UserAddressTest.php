@@ -21,15 +21,16 @@ function validAddressPayload(?UserAddress $base = null): array
     $addr = $base ?? UserAddress::factory()->make();
 
     return [
-        'label'       => $addr->label,
-        'line1'       => $addr->line1,
-        'line2'       => $addr->line2,
-        'district'    => $addr->district,
-        'city'        => $addr->city,
-        'state'       => $addr->state,
-        'postal_code' => $addr->postal_code,
-        'country'     => $addr->country,
-        'is_primary'  => $addr->is_primary,
+        'label'        => $addr->label,
+        'postal_code'  => $addr->postal_code,
+        'street'       => $addr->street,
+        'complement'   => $addr->complement,
+        'neighborhood' => $addr->neighborhood,
+        'city'         => $addr->city,
+        'number'       => $addr->number,
+        'state'        => $addr->state,
+        'country'      => $addr->country,
+        'is_primary'   => $addr->is_primary
     ];
 }
 
@@ -60,7 +61,7 @@ describe('User Address CRUD', function () {
 
         $this->assertDatabaseHas('user_addresses', [
             'user_id' => $this->studentA->id,
-            'line1'   => $payload['line1'],
+            'street'   => $payload['street'],
             'city'    => $payload['city'],
         ]);
     });

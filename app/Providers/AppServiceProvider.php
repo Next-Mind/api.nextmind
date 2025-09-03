@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\Psychologists\PsychologistDocumentPolicy;
 use App\Policies\Users\UserAddressPolicy;
 use App\Policies\Users\UserPhonePolicy;
 use Illuminate\Support\Facades\Gate;
@@ -38,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::guessPolicyNamesUsing(function (string $userAddress) {
             return UserAddressPolicy::class;
+        });
+
+        Gate::guessPolicyNamesUsing(function (string $psychologistDocument) {
+            return PsychologistDocumentPolicy::class;
         });
     }
 }

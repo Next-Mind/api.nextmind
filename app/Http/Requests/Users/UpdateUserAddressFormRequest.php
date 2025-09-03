@@ -22,13 +22,14 @@ class UpdateUserAddressFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'label' =>'sometimes|required|string',
-            'line1' =>'sometimes|required|string',
-            'line2' =>'sometimes|required|string',
-            'district' =>'sometimes|required|string',
+            'label' =>'sometimes|required|string',
+            'postal_code' =>'sometimes|required|string',
+            'street' =>'sometimes|required|string',
+            'number' => 'sometimes|required',
+            'complement' =>'sometimes|required|string',
+            'neighborhood' =>'sometimes|required|string',
             'city' =>'sometimes|required|string',
-            'state' =>'sometimes|required|string',
-            'postal_code' =>'sometimes|required',
+            'state' =>'sometimes|required',
             'country' =>'sometimes|required|string',
             'is_primary' =>'sometimes|required|boolean'
         ];

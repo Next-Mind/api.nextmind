@@ -17,12 +17,13 @@ class UserAddressResource extends JsonResource
         return [
             'id' => $this->id,
             'label' => $this->label,
-            'line1' => $this->line1,
-            'line2' => $this->line2,
-            'district' => $this->district,
-            'city' => $this->city,
-            'state' => $this->state,
             'postal_code' => $this->postal_code,
+            'street' => $this->street,
+            'complement' => $this->complement,
+            'neighborhood' => $this->neighborhood,
+            'city' => $this->city,
+            'number' => $this->number,
+            'state' => $this->state,
             'country' => $this->country,
             'is_primary' => $this->is_primary
         ];

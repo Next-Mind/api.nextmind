@@ -11,8 +11,6 @@ class UserFile extends Model
 {
     use HasUuids, HasFactory;
 
-    const CREATED_AT = "uploaded_at";
-
     protected $fillable = [
         'user_id',
         'purpose',
