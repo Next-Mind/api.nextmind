@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => $email,
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => Hash::make('Password123'),
             'cpf' => $this->faker->cpf(false),
             'birth_date' => fake()->date(),
             'photo_url' => 'https://i.pravatar.cc/300?u='. $email,

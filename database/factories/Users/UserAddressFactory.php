@@ -25,7 +25,7 @@ class UserAddressFactory extends Factory
             'neighborhood' => fake()->streetSuffix(),
             'city' => fake()->city(),
             'state' => fake()->stateAbbr(),
-            'country' => fake()->country(),
+            'country' => 'Brasil',
             'is_primary' => fake()->boolean()
             // 'label' => fake()->randomElement(['Work','House']),
             // 'line1' => fake()->streetName(),
