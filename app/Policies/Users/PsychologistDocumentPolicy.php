@@ -20,6 +20,13 @@ class PsychologistDocumentPolicy
      */
     public function view(User $user, PsychologistDocument $psychologistDocument): bool
     {
+        if($user->can('users.manage') && $user->can('files.manage.any')) {
+            return true;
+        }
+        if($user->can('files.manage.self') && $user->psychologistProfile->id === $psychologistDocument->psychologist_profile_id) {
+            return true;
+        }
+        
         return false;
     }
 

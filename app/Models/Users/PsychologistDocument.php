@@ -3,12 +3,13 @@
 namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class PsychologistDocument extends Model
 {
+    use HasUuids;
 
     protected $fillable = [
-        'id',
         'psychologist_profile_id',
         'user_file_id',
         'type',
@@ -20,5 +21,9 @@ class PsychologistDocument extends Model
 
     public function psychologistOwner(){
         return $this->belongsTo(PsychologistProfile::class,'psychologist_profile_id');
+    }
+
+    public function userFile(){
+        return $this->BelongsTo(UserFile::class,'user_file_id');
     }
 }

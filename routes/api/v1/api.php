@@ -13,6 +13,16 @@ use App\Http\Controllers\Users\UserPhoneController;
  */
 include 'auth.php';
 
+/**
+ * Rotas de admin
+ */
+include 'admin.php';
+
+/**
+ * Helpers importantes
+ */
+include 'helpers.php';
+
 
 
 

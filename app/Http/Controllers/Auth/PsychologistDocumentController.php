@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Exceptions\PsychologistProfileNotEligibleForDocumentSubmissionException;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Models\Users\UserFile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Users\PsychologistDocument;
+use App\Exceptions\UnauthorizedActionException;
 use App\Http\Requests\Auth\StorePsychologistDocumentRequest;
+use App\Exceptions\PsychologistProfileNotEligibleForDocumentSubmissionException;
 
 class PsychologistDocumentController extends Controller
 {
+    /**
+     * Método responsável por realizar o upload dos documentos necessários para o cadastro de um novo psicólogo
+     * @param \App\Http\Requests\Auth\StorePsychologistDocumentRequest $request
+     * @throws \App\Exceptions\PsychologistProfileNotEligibleForDocumentSubmissionException
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(StorePsychologistDocumentRequest $request)
     {
         //Obtém o usuário autenticado
@@ -71,5 +80,33 @@ class PsychologistDocumentController extends Controller
         }
 
         return response()->json('Success',201);
+    }
+
+    /**
+     * Método responsável por retornar um arquivo obrigatório de psicólogo
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Users\PsychologistDocument $document
+     * @throws \App\Exceptions\UnauthorizedActionException
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function show(Request $request, PsychologistDocument $document)
+    {
+        $allowed = Gate::allows("view",$document);
+
+        if(!$allowed) {
+            throw new UnauthorizedActionException();
+        }
+        
+        
+        $file = $document->userFile;
+        abort_unless($file->exists,404);
+        
+
+        $path = $file->path;
+        abort_unless(Storage::disk('local')->exists($path),404);
+
+        return Storage::disk('local')->download($path, $file->original_name ?? basename($path), [
+            'Cache-Control' => 'no-store',
+        ]);
     }
 }

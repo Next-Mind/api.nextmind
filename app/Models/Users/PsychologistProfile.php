@@ -36,7 +36,11 @@ class PsychologistProfile extends Model
     }
     
     public function psychologist(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+     public function user(){
+        return $this->belongsTo(User::class,'user_id');
     }
 
     public function approver(){
