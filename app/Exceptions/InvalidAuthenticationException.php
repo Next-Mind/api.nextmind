@@ -5,9 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use App\Traits\RenderToJson;
 
-class InvalidAdminCredencialsException extends Exception
+class InvalidAuthenticationException extends Exception
 {
-     use RenderToJson;
+    use RenderToJson;
 
     protected $message = 'Invalid admin credentials.';
 

@@ -2,15 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthGoogleWebClientController;
-use App\Http\Controllers\Auth\PsychologistRegisterController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/auth/success', function () {
-    return 'Auth Success';
-})->middleware('auth:sanctum');
 
 
 Route::prefix('/auth')->group(function(){
