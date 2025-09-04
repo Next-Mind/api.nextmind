@@ -36,10 +36,10 @@ class PsychologistRegisterFormRequest extends FormRequest
                 'required',
                 Rule::date()->format('Y-m-d')
             ],
-            'cpf' => 'cpf|unique:users',
+            'cpf' => 'unique:users|cpf',
 
             //INFORMAÇÕES BÁSICAS DO PSICÓLOGO
-            'crp' => ['required','string','max:50'],
+            'crp' => ['required','string','max:50','unique:psychologist_profiles'],
             'speciality' => ['required','string','max:100'],
             'bio' => ['nullable','string','max:4000']
         ];

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request as FacadeRequest;
 use App\Http\Requests\Auth\PsychologistRegisterFormRequest;
 
 class PsychologistRegisterController extends Controller
@@ -37,7 +38,7 @@ class PsychologistRegisterController extends Controller
 
         //Faz o login para o SPA
         Auth::login($user);
-        $request->session()->regenerate();
+        //FacadeRequest::session()->regenerate();
 
         return new UserResource($user);
     }

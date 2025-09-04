@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Policies\Psychologists;
+namespace App\Policies\Users;
 
 use App\Models\User;
 use App\Models\Users\PsychologistDocument;
-use Illuminate\Auth\Access\Response;
 
 class PsychologistDocumentPolicy
 {

@@ -19,6 +19,7 @@ class PsychologistProfileResource extends JsonResource
             'crp' => $this->crp,
             'speciality' => $this->speciality,
             'bio' => $this->bio,
+            'status' => $this->status,
             'verified_at' => $this->verified_at
         ];
     }

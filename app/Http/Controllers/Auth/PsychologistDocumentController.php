@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\PsychologistProfileNotEligibleForDocumentSubmissionException;
 use Illuminate\Support\Str;
 use App\Models\Users\UserFile;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,11 @@ class PsychologistDocumentController extends Controller
         //Verifica se o usuário tem permissão de enviar os arquivos para análise
         //Somente usuários que possuem perfil de psicólogo como "pendente" ou
         //Rejeitado podem enviar.
-        Gate::authorize("create",$user);
+        $allowed = Gate::allows("create",$user);
+
+        if(!$allowed) {
+            throw new PsychologistProfileNotEligibleForDocumentSubmissionException();
+        }
 
         //Validamos os arquivos enviados pela requisição
         $files = $request->validated();

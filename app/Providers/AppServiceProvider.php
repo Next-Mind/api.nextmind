@@ -32,17 +32,5 @@ class AppServiceProvider extends ServiceProvider
                 ->subject('Verifique seu e-mail')
                 ->markdown('emails.verifyEmail', ['url' => $url, 'user' => $notifiable]);
         });
-
-        Gate::guessPolicyNamesUsing(function (string $userPhone) {
-            return UserPhonePolicy::class;
-        });
-
-        Gate::guessPolicyNamesUsing(function (string $userAddress) {
-            return UserAddressPolicy::class;
-        });
-
-        Gate::guessPolicyNamesUsing(function (string $psychologistDocument) {
-            return PsychologistDocumentPolicy::class;
-        });
     }
 }
