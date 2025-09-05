@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Database\Factories\UserFactory;
+use Database\Seeders\Posts\PostCategorySeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionSeeder::class);
         $this->call(RoleHasPermissionSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(PostCategorySeeder::class);
     }
 }

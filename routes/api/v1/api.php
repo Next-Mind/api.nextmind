@@ -23,7 +23,10 @@ include 'admin.php';
  */
 include 'helpers.php';
 
-
+/**
+ * Gerenciamento de posts
+ */
+include 'posts.php';
 
 
 
@@ -44,8 +47,6 @@ Route::middleware('auth:sanctum')->group(function(){
     //CRUD DE ENDEREÇOS DO USUÁRIO
     Route::apiResource('users.addresses',UserAddressController::class)
         ->scoped(['user' => 'id', 'address' => 'id']);
-
-    Route::post('/teste',[PsychologistDocumentController::class,'store']);
 });
 
 
