@@ -17,23 +17,23 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory()
-        //     ->withAdminRole()
-        //     ->hasAddresses(2)
-        //     ->hasPhones(2)
-        //     ->state(fn()=>['name'=>'Admin','email'=>'admin@admin.com'])
-        //     ->create();
-        // User::factory(50)
-        //     ->withStudentRole()
-        //     ->has(StudentProfile::factory())
-        //     ->hasAddresses(2)
-        //     ->hasPhones(2)
-        //     ->create();
-        // User::factory(5)
-        //     ->withAdminRole()
-        //     ->hasAddresses(2)
-        //     ->hasPhones(2)
-        //     ->create();
+        User::factory()
+            ->withAdminRole()
+            ->hasAddresses(2)
+            ->hasPhones(2)
+            ->state(fn()=>['name'=>'Admin','email'=>'admin@admin.com'])
+            ->create();
+        User::factory(50)
+            ->withStudentRole()
+            ->has(StudentProfile::factory())
+            ->hasAddresses(2)
+            ->hasPhones(2)
+            ->create();
+        User::factory(5)
+            ->withAdminRole()
+            ->hasAddresses(2)
+            ->hasPhones(2)
+            ->create();
         User::factory(20)
             ->asPsychologistWithProfileAndDocuments()
             ->hasAddresses(2)

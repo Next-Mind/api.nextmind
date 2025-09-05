@@ -14,6 +14,7 @@ class UserFile extends Model
     protected $fillable = [
         'user_id',
         'purpose',
+        'original_name',
         'path',
         'mime_type'
     ];

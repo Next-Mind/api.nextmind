@@ -18,6 +18,7 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('purpose');
+            $table->string('original_name');
             $table->string('path');
             $table->string('mime_type');
             $table->timestamps();

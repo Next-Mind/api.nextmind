@@ -91,7 +91,7 @@ class UserFactory extends Factory
             
             foreach ($types as $type) {
                 PsychologistDocument::factory()
-                ->for($profile, 'psychologistProfile')
+                ->for($profile, 'psychologistOwner')
                 ->type($type)
                 ->for(
                     UserFile::factory()

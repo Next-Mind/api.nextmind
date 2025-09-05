@@ -23,7 +23,7 @@ class PsychologistApprovalController extends Controller
         return PsychologistProfile::with(['documents', 'psychologist:id,name'])
         ->whereIn('status', $status)
         ->orderByDesc('created_at')
-        ->paginate($perPage)
+        ->simplePaginate($perPage)
         ->toResourceCollection();
     }
 

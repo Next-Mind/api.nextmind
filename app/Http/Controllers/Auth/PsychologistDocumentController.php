@@ -55,6 +55,7 @@ class PsychologistDocumentController extends Controller
                 [
                     'user_id'=> $user->id,
                     'purpose'=> 'psychologist_doc',
+                    'original_name' => $file->name,
                     'path' => $path,
                     'mime_type' => $file->getClientMimeType(),
                 ]
