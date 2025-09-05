@@ -41,6 +41,7 @@ class RoleHasPermissionSeeder extends Seeder
             'reports.view',
             'settings.manage',
             'audit.view',
+            'admins.invite',
         ]);
     }
     

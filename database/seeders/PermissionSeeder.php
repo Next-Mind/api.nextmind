@@ -64,6 +64,9 @@ class PermissionSeeder extends Seeder
             'reports.view',
             'settings.manage',
             'audit.view',
+
+            //Admin Permissions
+            'admins.invite',
         ];
         
         foreach ($permissions as $name) {
