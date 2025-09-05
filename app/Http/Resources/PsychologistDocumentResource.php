@@ -31,7 +31,7 @@ class PsychologistDocumentResource extends JsonResource
             'id'               => $this->id,
             'type'             => $this->type,
             'status'           => $this->status,
-            'reviewed_by'      => $this->reviewed_by,
+            'reviewed_by'      => $this->whenLoaded('reviewer',fn()=> ['id'=>$this->reviewer->id,'name'=>$this->reviewer->name]),
             'reviewed_at'      => $this->reviewed_at,
             'rejection_reason' => $this->rejection_reason,
             'created_at'       => $this->created_at,

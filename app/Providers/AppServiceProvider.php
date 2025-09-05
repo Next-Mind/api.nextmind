@@ -2,13 +2,15 @@
 
 namespace App\Providers;
 
-use App\Policies\Psychologists\PsychologistDocumentPolicy;
-use App\Policies\Users\UserAddressPolicy;
-use App\Policies\Users\UserPhonePolicy;
 use Illuminate\Support\Facades\Gate;
+use App\Policies\Users\UserPhonePolicy;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Users\PsychologistProfile;
+use App\Policies\Users\UserAddressPolicy;
+use App\Observers\PsychologistProfileObserver;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Policies\Psychologists\PsychologistDocumentPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,5 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 ->subject('Verifique seu e-mail')
                 ->markdown('emails.verifyEmail', ['url' => $url, 'user' => $notifiable]);
         });
+
+         PsychologistProfile::observe(PsychologistProfileObserver::class);
     }
 }

@@ -21,6 +21,10 @@ class PsychologistRegisterController extends Controller
             'name','email','password','birth_date','cpf'
         ]);
 
+        $inputAddress = $request->safe()->only('address');
+
+        $inputPhone = $request->safe()->only('phone');
+
         $inputProfile = $request->safe()->only([
             'crp','speciality','bio'
         ]);
@@ -29,6 +33,9 @@ class PsychologistRegisterController extends Controller
         $user = User::create($inputUser);
 
         $user->assignRole('psychologist');
+
+        $user->addresses()->create($inputAddress['address']);
+        $user->phones()->create($inputPhone['phone']);
 
         //Cria o perfil do usuário no banco de dados
         $user->psychologistProfile()->create($inputProfile);

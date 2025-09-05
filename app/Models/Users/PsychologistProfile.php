@@ -11,6 +11,8 @@ class PsychologistProfile extends Model
 {
     use HasUuids, HasFactory;
 
+    public const STATUS_APPROVED = 'approved';
+
     
     protected $fillable = [
         'user_id',
