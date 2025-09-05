@@ -45,7 +45,7 @@ class PsychologistRegisterController extends Controller
 
         //Faz o login para o SPA
         Auth::login($user);
-        //FacadeRequest::session()->regenerate();
+        FacadeRequest::session()->regenerate();
 
         return new UserResource($user);
     }
