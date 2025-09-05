@@ -26,11 +26,12 @@ class PsychologistDocumentController extends Controller
     {
         //Obtém o usuário autenticado
         $user = Auth::user();
+        $user->load('psychologistProfile');
 
         //Verifica se o usuário tem permissão de enviar os arquivos para análise
         //Somente usuários que possuem perfil de psicólogo como "pendente" ou
         //Rejeitado podem enviar.
-        $allowed = Gate::allows("create",$user);
+        $allowed = Gate::allows("create",PsychologistDocument::class);
 
         if(!$allowed) {
             throw new PsychologistProfileNotEligibleForDocumentSubmissionException();
@@ -55,7 +56,7 @@ class PsychologistDocumentController extends Controller
                 [
                     'user_id'=> $user->id,
                     'purpose'=> 'psychologist_doc',
-                    'original_name' => $file->name,
+                    'original_name' => $type,
                     'path' => $path,
                     'mime_type' => $file->getClientMimeType(),
                 ]

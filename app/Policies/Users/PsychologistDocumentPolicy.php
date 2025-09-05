@@ -35,8 +35,7 @@ class PsychologistDocumentPolicy
      */
     public function create(User $user): bool
     {
-        $user->load('psychologistProfile');
-        if($user->psychologistProfile?->status === 'pending' || $user->psychologistProfile?->status === 'rejected') {
+        if($user->psychologistProfile?->status == 'pending' || $user->psychologistProfile?->status == 'rejected') {
             return true;
         }
         return false;
