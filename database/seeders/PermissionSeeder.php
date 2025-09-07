@@ -34,6 +34,7 @@ class PermissionSeeder extends Seeder
             
             // Posts (blog)
             'posts.view.any',
+            'posts.view.self',
             'posts.create.self',
             'posts.update.self',
             'posts.delete.self',

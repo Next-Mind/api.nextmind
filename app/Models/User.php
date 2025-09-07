@@ -4,15 +4,16 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Posts\Post;
+use App\Models\Users\UserFile;
+use App\Models\Users\UserPhone;
+use App\Models\Users\UserAddress;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Users\StudentProfile;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Users\PsychologistProfile;
-use App\Models\Users\StudentProfile;
-use App\Models\Users\UserAddress;
-use App\Models\Users\UserFile;
-use App\Models\Users\UserPhone;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -83,5 +84,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function files()
     {
         return $this->hasMany(UserFile::class);
+    }
+
+    public function posts(){
+        return $this->hasMany(Post::class,'author_id');
     }
 }

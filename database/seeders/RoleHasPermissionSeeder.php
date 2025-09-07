@@ -60,6 +60,7 @@ class RoleHasPermissionSeeder extends Seeder
             'appointment.notes.update.self',
             
             'posts.view.any',
+            'posts.view.self',
             'posts.create.self',
             'posts.update.self',
             'posts.delete.self',

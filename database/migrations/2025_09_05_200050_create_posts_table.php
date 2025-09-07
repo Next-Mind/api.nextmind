@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignUuid('post_category_id')
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->foreignUuid('author_id')
-                ->constrained('users')
+                ->constrained('users','id')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('title');
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('language',10)->default('pt-BR')->index();
             $table->unsignedInteger('like_count')->default(0);
             $table->unsignedSmallInteger('reading_time')->default(5);
-            $table->enum('visibiliy',['public','private'])->default('public');
+            $table->enum('visibility',['public','private'])->default('public');
             $table->timestamps();
         });
     }
