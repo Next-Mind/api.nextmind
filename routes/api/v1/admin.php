@@ -24,3 +24,5 @@ Route::middleware(['auth:sanctum','can:admins.invite'])->group(function () {
 // Públicas (o SPA chama estas com o token do e-mail)
 Route::post('/admin/invitations/accept',  AcceptAdminInvitationController::class);
 Route::post('/admin/invitations/decline', DeclineAdminInvitationController::class);
+
+

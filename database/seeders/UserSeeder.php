@@ -23,18 +23,18 @@ class UserSeeder extends Seeder
             ->hasPhones(2)
             ->state(fn()=>['name'=>'Admin','email'=>'admin@admin.com'])
             ->create();
-        User::factory(50)
+        User::factory(1000)
             ->withStudentRole()
             ->has(StudentProfile::factory())
             ->hasAddresses(2)
             ->hasPhones(2)
             ->create();
-        User::factory(5)
+        User::factory(20)
             ->withAdminRole()
             ->hasAddresses(2)
             ->hasPhones(2)
             ->create();
-        User::factory(20)
+        User::factory(100)
             ->asPsychologistWithProfileAndDocuments()
             ->hasPosts(10)
             ->hasAddresses(2)

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Posts\Post;
+use App\Models\Users\Contact;
 use App\Models\Users\UserFile;
 use App\Models\Users\UserPhone;
 use App\Models\Users\UserAddress;

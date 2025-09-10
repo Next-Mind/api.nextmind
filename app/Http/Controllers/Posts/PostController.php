@@ -58,7 +58,7 @@ class PostController extends Controller
                 ]);
             }
             
-            $posts = $query->latest()->paginate(15);
+            $posts = $query->latest()->simplePaginate(15);
             return $summary
             ? PostSummaryResource::collection($posts)
             :  PostResource::collection($posts);
