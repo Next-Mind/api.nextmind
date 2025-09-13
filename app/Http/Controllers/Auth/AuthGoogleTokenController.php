@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\UserRegistered;
+use Exception;
 use App\Models\User;
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Auth\Events\Registered;
+use App\Http\Resources\AuthUserResource;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Http\Resources\Json\JsonResource;
 use App\Exceptions\ProviderUserNotFoundException;
 use App\Http\Requests\Auth\AuthGoogleFormRequest;
-use App\Http\Resources\UserResource;
-use Exception;
-use Illuminate\Auth\Events\Registered;
 
 class AuthGoogleTokenController extends Controller
 {
@@ -20,7 +22,6 @@ class AuthGoogleTokenController extends Controller
      * token de autenticação na api
      *
      * @param AuthGoogleFormRequest $request
-     * @return UserResource
      */
     public function __invoke(AuthGoogleFormRequest $request)
     {
@@ -58,6 +59,14 @@ class AuthGoogleTokenController extends Controller
             $user->assignRole('student');
         }
 
-        return (new UserResource($user))->additional(compact(['is_new_user','token']));
+        // return (new AuthUserResource($user))->additional(compact(['is_new_user','token']));
+
+        JsonResource::withoutWrapping();
+        
+        return response()->json([
+        ...UserResource::make($user)->resolve(),
+        'is_new_user' => $is_new_user,
+        'token' => $token
+    ]);
     }
 }
