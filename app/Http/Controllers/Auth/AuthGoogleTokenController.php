@@ -13,6 +13,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Exceptions\ProviderUserNotFoundException;
 use App\Http\Requests\Auth\AuthGoogleFormRequest;
+use Kreait\Firebase\Auth as FirebaseAuth;
 
 class AuthGoogleTokenController extends Controller
 {
@@ -27,18 +28,28 @@ class AuthGoogleTokenController extends Controller
     {
         
         try{
+            $auth = app('firebase.auth');
             $idToken = $request->validated('id_token');
-            $googleUser = Socialite::driver('google')->userFromToken($idToken);
+
+            $verified = $auth->verifyIdToken($idToken);
+            $claims = $verified->claims();
+
+            dd($claims);
+
+            $email = $claims->get('email');
+            $name   = $claims->get('name') ?? trim(($claims->get('given_name').' '.$claims->get('family_name')) ?: '');
+            $photo  = $claims->get('picture');
+            $emailVerified = (bool) $claims->get('email_verified');
 
         }catch(Exception $e){
             throw new ProviderUserNotFoundException();
         }
 
         $user = User::firstOrCreate([
-            'email' => $googleUser->getEmail(),
+            'email' => $email,
         ],[
-            'name' => $googleUser->getName(),
-            'photo_url' => $googleUser->getAvatar(),
+            'name' => $name,
+            'photo_url' => $photo,
         ]);
 
         $is_new_user = $user->wasRecentlyCreated;
