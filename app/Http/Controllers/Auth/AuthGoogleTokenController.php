@@ -40,7 +40,7 @@ class AuthGoogleTokenController extends Controller
             $emailVerified = (bool) $claims->get('email_verified');
 
         }catch(Exception $e){
-            throw new ProviderUserNotFoundException();
+            throw $e;
         }
 
         $user = User::firstOrCreate([
