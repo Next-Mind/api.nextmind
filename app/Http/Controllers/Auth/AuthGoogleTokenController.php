@@ -34,8 +34,6 @@ class AuthGoogleTokenController extends Controller
             $verified = $auth->verifyIdToken($idToken);
             $claims = $verified->claims();
 
-            dd($claims);
-
             $email = $claims->get('email');
             $name   = $claims->get('name') ?? trim(($claims->get('given_name').' '.$claims->get('family_name')) ?: '');
             $photo  = $claims->get('picture');
