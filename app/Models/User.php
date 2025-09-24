@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Appointments\Availability;
 use App\Models\Posts\Post;
 use App\Models\Users\Contact;
 use App\Models\Users\UserFile;
@@ -89,5 +90,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function posts(){
         return $this->hasMany(Post::class,'author_id');
+    }
+
+    public function availabilities(){
+        return $this->hasMany(Availability::class);
     }
 }

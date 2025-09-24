@@ -28,6 +28,11 @@ include 'helpers.php';
  */
 include 'posts.php';
 
+/**
+ * Gerenciamento de consultas
+ */
+include 'appointments.php';
+
 
 
 
