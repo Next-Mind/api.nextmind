@@ -5,10 +5,12 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use App\Policies\Users\UserPhonePolicy;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Appointments\Availability;
 use App\Models\Users\PsychologistProfile;
 use App\Policies\Users\UserAddressPolicy;
 use App\Observers\PsychologistProfileObserver;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Policies\Appointments\AvailabilityPolicy;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\Policies\Psychologists\PsychologistDocumentPolicy;
 

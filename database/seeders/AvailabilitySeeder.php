@@ -1,4 +1,7 @@
 <?php
+
+namespace Database\Seeders;
+
 use App\Models\Appointments\Availability;
 use App\Models\User;
 use Carbon\Carbon;
