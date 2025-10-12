@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('ticket_categories', function (Blueprint $table) {
             $table->foreignUuid('id')->primary();
             $table->string('name');
+            $table->string('slug');
+            $table->integer('position');
             $table->softDeletes();
             $table->timestamps();
         });

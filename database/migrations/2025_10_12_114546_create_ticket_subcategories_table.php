@@ -18,6 +18,8 @@ return new class extends Migration
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
             $table->string('name');
+            $table->string('slug');
+            $table->integer('position');
             $table->softDeletes();
             $table->timestamps();
         });
