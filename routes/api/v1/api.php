@@ -33,6 +33,11 @@ include 'posts.php';
  */
 include 'appointments.php';
 
+/**
+ * Gerenciamento Help Desk
+ */
+include 'helpDesk.php';
+
 
 
 

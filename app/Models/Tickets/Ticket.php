@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Tickets\TicketSubcategory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ticket extends Model
 {
     /** @use HasFactory<\Database\Factories\Tickets\TicketFactory> */
-    use HasUuids, HasFactory;
+    use HasUuids, HasFactory, SoftDeletes;
 
 
     protected static function booted(): void

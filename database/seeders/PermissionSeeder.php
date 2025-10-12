@@ -65,9 +65,15 @@ class PermissionSeeder extends Seeder
             'reports.view',
             'settings.manage',
             'audit.view',
-
+            
             //Admin Permissions
             'admins.invite',
+            
+            //Help Desk Permissions
+            'helpdesk.categories.view.any',
+            'helpdesk.categories.create',
+            'helpdesk.categories.update',
+            'helpdesk.categories.delete',
         ];
         
         foreach ($permissions as $name) {
