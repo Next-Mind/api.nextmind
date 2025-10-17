@@ -49,9 +49,9 @@ class Ticket extends Model
         return DB::transaction(function ()  {
             // Cria ou incrementa
             $sql = "
-                INSERT INTO ticket_sequences (`current_value`)
+                INSERT INTO ticket_counters (`last_number`)
                 VALUES (0)
-                ON DUPLICATE KEY UPDATE `current_value` = LAST_INSERT_ID(`current_value` + 1)
+                ON DUPLICATE KEY UPDATE `last_number` = LAST_INSERT_ID(`last_number` + 1)
             ";
 
             DB::statement($sql);
