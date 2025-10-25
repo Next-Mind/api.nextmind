@@ -92,4 +92,9 @@ class Ticket extends Model
     {
         return $this->belongsTo(TicketStatus::class, 'ticket_status_id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(TicketMessage::class,'ticket_id');
+    }
 }
