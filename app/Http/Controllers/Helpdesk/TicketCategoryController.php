@@ -10,6 +10,8 @@ use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\StoreTicketCategoryRequest;
 use App\Http\Requests\UpdateTicketCategoryRequest;
 
+use Illuminate\Support\Facades\Auth;
+
 class TicketCategoryController extends Controller
 {
     public function index(Request $request) {
@@ -18,7 +20,6 @@ class TicketCategoryController extends Controller
         
         $q = TicketCategory::query()
         ->when($withSubs, fn($qr) => $qr->with('subcategories'))
-        ->whereIsActive(true)
         ->orderBy('position');
         
         return response()->json($q->get());
@@ -40,14 +41,14 @@ class TicketCategoryController extends Controller
     }
     
     public function update(UpdateTicketCategoryRequest $request, TicketCategory $ticketCategory){
-        
-        Gate::authorize('update',$ticketCategory);
-        
+
+        //Gate::authorize('update',$ticketCategory);
+
         $data = $request->validated();
         
         $ticketCategory->update($data);
         
-        return response()->json($ticketCategory->fresh()->load('subcategories'));
+        return response()->json($ticketCategory->fresh());
     }
     
     public function destroy(Request $request, TicketCategory $ticketCategory){

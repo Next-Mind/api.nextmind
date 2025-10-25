@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\HelpDesk\TicketCategoryController;
 use App\Http\Controllers\Helpdesk\TicketController;
 use App\Http\Controllers\Helpdesk\TicketStatusController;
@@ -24,4 +25,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tickets/categories',    TicketCategoryController::class);
     Route::apiResource('tickets/subcategories', TicketSubcategoryController::class);
     Route::apiResource('tickets/statuses',      TicketStatusController::class);
+
 });
