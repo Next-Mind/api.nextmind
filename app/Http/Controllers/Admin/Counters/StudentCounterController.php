@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Counters;
 
 use App\Http\Resources\Admin\Counters\CounterResource;
 use stdClass;
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

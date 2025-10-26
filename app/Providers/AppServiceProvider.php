@@ -2,17 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
-use App\Policies\Users\UserPhonePolicy;
+use App\Modules\Psychologists\Models\PsychologistProfile;
+use App\Modules\Psychologists\Observers\PsychologistProfileObserver;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Appointments\Availability;
-use App\Models\Users\PsychologistProfile;
-use App\Policies\Users\UserAddressPolicy;
-use App\Observers\PsychologistProfileObserver;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use App\Policies\Appointments\AvailabilityPolicy;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Policies\Psychologists\PsychologistDocumentPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,12 +25,12 @@ class AppServiceProvider extends ServiceProvider
     {
         //Event::listen(UserRegistered::class,SendUserWelcomeEmail::class);
 
-        VerifyEmail::toMailUsing(function (object $notifiable,string $url){
+        VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
                 ->subject('Verifique seu e-mail')
                 ->markdown('emails.verifyEmail', ['url' => $url, 'user' => $notifiable]);
         });
 
-         PsychologistProfile::observe(PsychologistProfileObserver::class);
+        PsychologistProfile::observe(PsychologistProfileObserver::class);
     }
 }
