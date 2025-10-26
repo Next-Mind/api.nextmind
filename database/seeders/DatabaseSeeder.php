@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Database\Factories\UserFactory;
-use Database\Seeders\Posts\PostCategorySeeder;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Modules\Users\Models\User;
+use Database\Seeders\Users\RoleSeeder;
+use Database\Seeders\Users\UserSeeder;
+use Database\Seeders\Users\PermissionSeeder;
+use Database\Seeders\Posts\PostCategorySeeder;
+use Database\Seeders\Users\RoleHasPermissionSeeder;
 
 class DatabaseSeeder extends Seeder
 {

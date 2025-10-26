@@ -1,7 +1,15 @@
 <?php
 
-/**
- * ROTAS API V1
- */
+use Illuminate\Support\Facades\File;
 
-include 'api/v1/api.php';
+$modulesPath = app_path('Modules');
+
+$modules = File::directories($modulesPath);
+
+foreach ($modules as $modulePath) {
+    $routesFile = $modulePath . '/routes.php';
+
+    if (File::exists($routesFile)) {
+        require $routesFile;
+    }
+}

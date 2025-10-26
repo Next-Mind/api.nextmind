@@ -3,8 +3,7 @@
 namespace Database\Seeders\Posts;
 
 use Illuminate\Database\Seeder;
-use App\Models\Posts\PostCategory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Modules\Posts\Models\PostCategory;
 
 class PostCategorySeeder extends Seeder
 {
@@ -22,7 +21,7 @@ class PostCategorySeeder extends Seeder
             ['name' => 'TDAH',                        'slug' => 'tdah'],
             ['name' => 'Autismo (TEA)',               'slug' => 'autismo-tea'],
             ['name' => 'Transtorno Bipolar',          'slug' => 'transtorno-bipolar'],
-            ['name' => 'Transtornos de Personalidade','slug' => 'transtornos-de-personalidade'],
+            ['name' => 'Transtornos de Personalidade', 'slug' => 'transtornos-de-personalidade'],
             ['name' => 'TEPT / Trauma',               'slug' => 'tept-trauma'],
             ['name' => 'Fobias',                      'slug' => 'fobias'],
             ['name' => 'Estresse',                    'slug' => 'estresse'],
@@ -40,7 +39,7 @@ class PostCategorySeeder extends Seeder
             ['name' => 'Psicoeducação',               'slug' => 'psicoeducacao'],
             ['name' => 'Prevenção do Suicídio',       'slug' => 'prevencao-do-suicidio'],
         ];
-        
+
         PostCategory::query()->upsert($rows, ['slug'], ['name']);
     }
 }
