@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('tickets/{ticket}/messages/{message}', [TicketMessageController::class, 'destroy']);
 
     // Tabelas auxiliares
-    Route::apiResource('tickets/categories',    TicketCategoryController::class);
-    Route::apiResource('tickets/subcategories', TicketSubcategoryController::class);
-    Route::apiResource('tickets/statuses',      TicketStatusController::class);
+    Route::apiResource('tickets-categories',    TicketCategoryController::class);
+    Route::apiResource('tickets-subcategories', TicketSubcategoryController::class);
+    Route::apiResource('tickets-statuses',      TicketStatusController::class);
 });
