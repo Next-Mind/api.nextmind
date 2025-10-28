@@ -11,61 +11,79 @@ class UpdateTicketRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        /** @var Ticket $ticket */
-        $ticket = $this->route('ticket');
-        return $this->user()?->can('update', $ticket) ?? false;
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            'subject'               => ['sometimes', 'string', 'max:255'],
-            'description'           => ['sometimes', 'nullable', 'string'],
-            'ticket_category_id'    => ['sometimes', 'uuid', 'exists:ticket_categories,id'],
-            'ticket_subcategory_id' => ['sometimes', 'nullable', 'uuid', 'exists:ticket_subcategories,id'],
-            'ticket_status_id'      => ['sometimes', 'uuid', 'exists:ticket_statuses,id'],
-            'assigned_to_id'        => ['sometimes', 'nullable', 'uuid', 'exists:users,id'],
-            'requester_id'          => ['sometimes', 'uuid', 'exists:users,id'],
-            'priority'              => ['sometimes', Rule::in(['low', 'normal', 'high', 'urgent'])],
 
-            // Campos imutáveis/administrados pelo sistema
-            'opened_by_id'          => ['prohibited'],
-            'ticket_number'         => ['prohibited'],
-            'comments_count'        => ['prohibited'],
-            'attachments_count'     => ['prohibited'],
-            'created_at'            => ['prohibited'],
-            'updated_at'            => ['prohibited'],
-            'deleted_at'            => ['prohibited'],
+            'subject'               => ['sometimes', 'string', 'max:255'],
+
+            'opened_by_id'          => ['sometimes', 'nullable', 'string', 'size:36', 'exists:users,id'],
+            'requester_id'          => ['sometimes', 'nullable', 'string', 'size:36', 'exists:users,id'],
+            'assigned_to_id'        => ['sometimes', 'nullable', 'string', 'size:36', 'exists:users,id'],
+
+            'ticket_category_id'    => ['sometimes', 'string', 'size:36', 'exists:ticket_categories,id'],
+            'ticket_subcategory_id' => ['sometimes', 'nullable', 'string', 'size:36', 'exists:ticket_subcategories,id'],
+            'ticket_status_id'      => ['sometimes', 'string', 'size:36', 'exists:ticket_statuses,id'],
+
+            'first_response_due_at' => ['sometimes', 'nullable', 'date'],
+            'resolution_due_at'     => ['sometimes', 'nullable', 'date'],
+
+            'resolved_at'           => ['sometimes', 'nullable', 'date'],
+            'closed_at'             => ['sometimes', 'nullable', 'date'],
+
+            'ticket_number'     => ['prohibited'],
+            'comments_count'    => ['prohibited'],
+            'attachments_count' => ['prohibited'],
+
+            'created_at'        => ['prohibited'],
+            'updated_at'        => ['prohibited'],
+            'deleted_at'        => ['prohibited'],
         ];
     }
 
     protected function prepareForValidation(): void
     {
+        if ($this->has('subject')) {
+            $this->merge([
+                'subject' => trim((string) $this->input('subject')),
+            ]);
+        }
+
         foreach (
             [
+                'opened_by_id',
+                'requester_id',
+                'assigned_to_id',
                 'ticket_category_id',
                 'ticket_subcategory_id',
                 'ticket_status_id',
-                'assigned_to_id',
-                'requester_id'
             ] as $key
         ) {
             if ($this->filled($key)) {
-                $this->merge([$key => Str::lower((string)$this->input($key))]);
+                $this->merge([
+                    $key => Str::lower((string) $this->input($key)),
+                ]);
             }
-        }
-        if ($this->has('subject')) {
-            $this->merge(['subject' => trim((string)$this->input('subject'))]);
         }
     }
 
     public function attributes(): array
     {
         return [
-            'ticket_category_id'    => 'categoria',
-            'ticket_subcategory_id' => 'subcategoria',
-            'ticket_status_id'      => 'status',
-            'assigned_to_id'        => 'responsável',
+            'subject'                => 'subject',
+            'opened_by_id'           => 'opened by user',
+            'requester_id'           => 'requester',
+            'assigned_to_id'         => 'assignee',
+            'ticket_category_id'     => 'category',
+            'ticket_subcategory_id'  => 'subcategory',
+            'ticket_status_id'       => 'status',
+            'first_response_due_at'  => 'first response due date',
+            'resolution_due_at'      => 'resolution due date',
+            'resolved_at'            => 'resolved at',
+            'closed_at'              => 'closed at',
         ];
     }
 }

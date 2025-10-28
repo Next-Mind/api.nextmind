@@ -3,10 +3,10 @@
 namespace App\Modules\HelpDesk\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\HelpDesk\Actions\DestroyTicketCategoryAction;
-use App\Modules\HelpDesk\Actions\IndexTicketCategoryAction;
-use App\Modules\HelpDesk\Actions\StoreTicketCategoryAction;
-use App\Modules\HelpDesk\Actions\UpdateTicketCategoryAction;
+use App\Modules\HelpDesk\Actions\TicketCategory\DestroyTicketCategoryAction;
+use App\Modules\HelpDesk\Actions\TicketCategory\IndexTicketCategoryAction;
+use App\Modules\HelpDesk\Actions\TicketCategory\StoreTicketCategoryAction;
+use App\Modules\HelpDesk\Actions\TicketCategory\UpdateTicketCategoryAction;
 use App\Modules\HelpDesk\Http\Resources\TicketCategoryResource;
 use App\Modules\HelpDesk\Models\TicketCategory;
 use App\Modules\HelpDesk\Http\Requests\StoreTicketCategoryRequest;
@@ -23,10 +23,10 @@ class TicketCategoryController extends Controller
         return TicketCategoryResource::collection($ticketCategories);
     }
 
-    public function show(TicketCategory $ticketCategory)
+    public function show(TicketCategory $ticketsCategory)
     {
-        Gate::authorize('view', $ticketCategory);
-        return new TicketCategoryResource($ticketCategory);
+        Gate::authorize('view', $ticketsCategory);
+        return new TicketCategoryResource($ticketsCategory);
     }
 
     public function store(StoreTicketCategoryRequest $request, StoreTicketCategoryAction $action)
@@ -37,18 +37,18 @@ class TicketCategoryController extends Controller
         return new TicketCategoryResource($category);
     }
 
-    public function update(UpdateTicketCategoryRequest $request, TicketCategory $ticketCategory, UpdateTicketCategoryAction $action)
+    public function update(UpdateTicketCategoryRequest $request, TicketCategory $ticketsCategory, UpdateTicketCategoryAction $action)
     {
-        Gate::authorize('update', $ticketCategory);
+        Gate::authorize('update', $ticketsCategory);
         $data = $request->validated();
-        $ticketCategory = $action->execute($data, $ticketCategory);
-        return new TicketCategoryResource($ticketCategory);
+        $ticketsCategory = $action->execute($data, $ticketsCategory);
+        return new TicketCategoryResource($ticketsCategory);
     }
 
-    public function destroy(TicketCategory $ticketCategory, DestroyTicketCategoryAction $action)
+    public function destroy(TicketCategory $ticketsCategory, DestroyTicketCategoryAction $action)
     {
-        Gate::authorize('destroy', $ticketCategory);
-        $action->execute($ticketCategory);
+        Gate::authorize('destroy', $ticketsCategory);
+        $action->execute($ticketsCategory);
         return response()->json([], 204);
     }
 }

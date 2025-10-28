@@ -2,68 +2,53 @@
 
 namespace App\Modules\HelpDesk\Http\Controllers;
 
-use App\Modules\HelpDesk\Models\Ticket;
 use App\Http\Controllers\Controller;
-use App\Modules\HelpDesk\Models\TicketStatus;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Modules\HelpDesk\Models\Ticket;
+use App\Modules\HelpDesk\Models\TicketStatus;
+use App\Modules\HelpDesk\Http\Resources\TicketStatusResource;
+use App\Modules\HelpDesk\Http\Requests\StoreTicketStatusRequest;
+use App\Modules\HelpDesk\Http\Requests\UpdateTicketStatusRequest;
+use App\Modules\HelpDesk\Actions\TicketStatus\ShowTicketStatusAction;
+use App\Modules\HelpDesk\Actions\TicketStatus\IndexTicketStatusAction;
+use App\Modules\HelpDesk\Actions\TicketStatus\StoreTicketStatusAction;
+use App\Modules\HelpDesk\Actions\TicketStatus\UpdateTicketStatusAction;
+use App\Modules\HelpDesk\Actions\TicketStatus\DestroyTicketStatusAction;
 
 class TicketStatusController extends Controller
 {
-    public function index(Request $request)
+    public function index(IndexTicketStatusAction $action)
     {
-        Gate::authorize('viewAny', Ticket::class);
-
-        $statuses = TicketStatus::orderBy('name')->get();
-
-        return response()->json($statuses);
+        Gate::authorize('viewAny', TicketStatus::class);
+        $statuses = $action->execute();
+        return TicketStatusResource::collection($statuses);
     }
 
-    public function store(Request $request)
+    public function store(StoreTicketStatusRequest $request, StoreTicketStatusAction $action)
     {
-        Gate::authorize('update', Ticket::firstOrNew());
-
-        $data = $request->validate([
-            'name'        => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'is_closed'   => ['required', 'boolean'], // exemplo comum
-        ]);
-
-        $status = TicketStatus::create($data);
-
-        return response()->json($status, 201);
+        Gate::authorize('create', TicketStatus::class);
+        $status = $action->execute($request->validated());
+        return new TicketStatusResource($status);
     }
 
-    public function show(Request $request, TicketStatus $ticketStatus)
+    public function show(TicketStatus $ticketsStatus, ShowTicketStatusAction $action)
     {
-        Gate::authorize('viewAny', Ticket::class);
-
-        return response()->json($ticketStatus);
+        Gate::authorize('viewAny', TicketStatus::class);
+        $status = $action->execute($ticketsStatus);
+        return new TicketStatusResource($status);
     }
 
-    public function update(Request $request, TicketStatus $ticketStatus)
+    public function update(UpdateTicketStatusRequest $request, TicketStatus $ticketsStatus, UpdateTicketStatusAction $action)
     {
-        Gate::authorize('update', Ticket::firstOrNew());
-
-        $data = $request->validate([
-            'name'        => ['sometimes', 'string', 'max:255'],
-            'description' => ['sometimes', 'string', 'nullable'],
-            'is_closed'   => ['sometimes', 'boolean'],
-        ]);
-
-        $ticketStatus->fill($data)->save();
-
-        return response()->json($ticketStatus);
+        Gate::authorize('update', $ticketsStatus);
+        $status = $action->execute($ticketsStatus, $request->validated());
+        return new TicketStatusResource($status);
     }
 
-    public function destroy(Request $request, TicketStatus $ticketStatus)
+    public function destroy(TicketStatus $ticketsStatus, DestroyTicketStatusAction $action)
     {
-        Gate::authorize('delete', Ticket::firstOrNew());
-
-        $ticketStatus->delete();
-
-        return response()->json([
-            'message' => 'Status deleted',
-        ]);
+        Gate::authorize('delete', $ticketsStatus);
+        $action->execute($ticketsStatus);
+        return response()->noContent();
     }
 }

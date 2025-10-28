@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Modules\HelpDesk\Http\Resources;
+namespace App\Modules\Users\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TicketCategoryResource extends JsonResource
+class UserSummaryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,8 @@ class TicketCategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'slug' => $this->slug,
-            'position' => $this->position,
-            'subcategories' => TicketSubcategoryResource::collection(
-                $this->whenLoaded('subcategories')
-            ),
+            'email' => $this->email,
+            'photo_url' => $this->photo_url
         ];
     }
 }

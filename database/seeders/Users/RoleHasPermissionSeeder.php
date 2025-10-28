@@ -49,7 +49,11 @@ class RoleHasPermissionSeeder extends Seeder
             'helpdesk.tickets.view.any',
             'helpdesk.tickets.create',
             'helpdesk.tickets.update',
-            'helpdesk.tickets.delete'
+            'helpdesk.tickets.delete',
+            'helpdesk.status.view.any',
+            'helpdesk.status.create',
+            'helpdesk.status.update',
+            'helpdesk.status.delete'
         ]);
     }
 
@@ -82,6 +86,8 @@ class RoleHasPermissionSeeder extends Seeder
             'helpdesk.tickets.view.self',
             'helpdesk.tickets.create',
 
+            'helpdesk.status.view.any',
+
         ]);
     }
 
@@ -104,6 +110,8 @@ class RoleHasPermissionSeeder extends Seeder
 
             'helpdesk.tickets.view.self',
             'helpdesk.tickets.create',
+
+            'helpdesk.status.view.any',
         ]);
     }
 

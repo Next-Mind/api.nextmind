@@ -2,69 +2,52 @@
 
 namespace App\Modules\HelpDesk\Http\Controllers;
 
-use App\Modules\HelpDesk\Models\Ticket;
-use App\Http\Controllers\Controller;
-use App\Modules\HelpDesk\Models\TicketMessage;
+use App\Modules\HelpDesk\Exceptions\TicketMessageNotBelongsToTicketException;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use App\Modules\HelpDesk\Models\Ticket;
+use App\Modules\HelpDesk\Models\TicketMessage;
+use App\Modules\HelpDesk\Http\Resources\TicketMessageResource;
+use App\Modules\HelpDesk\Http\Requests\StoreTicketMessageRequest;
+use App\Modules\HelpDesk\Actions\TicketMessage\IndexTicketMessageAction;
+use App\Modules\HelpDesk\Actions\TicketMessage\StoreTicketMessageAction;
+use App\Modules\Users\Models\User;
 
 class TicketMessageController extends Controller
 {
-    /**
-     * GET /tickets/{ticket}/messages
-     */
-    public function index(Request $request, Ticket $ticket)
+
+    public function index(Request $request, Ticket $ticket, IndexTicketMessageAction $action)
     {
         Gate::authorize('view', $ticket);
-
-        $messages = $ticket->messages()
-            ->orderBy('created_at', 'asc')
-            ->get();
-
-        return response()->json($messages);
+        $messages = $action->execute($ticket);
+        return TicketMessageResource::collection($messages);
     }
 
-    /**
-     * POST /tickets/{ticket}/messages
-     */
-    public function store(Request $request, Ticket $ticket)
+    public function store(StoreTicketMessageRequest $request, Ticket $ticket, StoreTicketMessageAction $action)
     {
-        // Se o user pode atualizar o ticket, ele pode participar da conversa.
         Gate::authorize('update', $ticket);
-
-        $data = $request->validate([
-            'message' => ['required', 'string'],
-            // se você suporta anexos, etc, colocar aqui
-        ]);
-
-        $data['user_id']   = $request->user()->id;
-        $data['ticket_id'] = $ticket->id;
-
-        $msg = TicketMessage::create($data);
-
-        return response()->json($msg, 201);
+        /**
+         * @var User
+         */
+        $user = $request->user();
+        $validated = $request->validated();
+        $message = $action->execute(
+            $ticket,
+            $user,
+            $validated
+        );
+        $message->load('author');
+        return new TicketMessageResource($message);
     }
 
-    /**
-     * DELETE /tickets/{ticket}/messages/{message}
-     *
-     * Vou usar mesma permissão de delete do ticket:
-     * se o cara pode deletar o ticket, ele pode moderar/remover mensagens.
-     * (Se quiser só permitir apagar a própria mensagem, dá pra mudar.)
-     */
     public function destroy(Request $request, Ticket $ticket, TicketMessage $message)
     {
         Gate::authorize('delete', $ticket);
-
-        // opcional: garantir que a mensagem pertence ao ticket
         if ($message->ticket_id !== $ticket->id) {
-            return response()->json(['error' => 'Message does not belong to this ticket'], 422);
+            throw new TicketMessageNotBelongsToTicketException();
         }
-
         $message->delete();
-
-        return response()->json([
-            'message' => 'Message deleted',
-        ]);
+        return response()->noContent();
     }
 }

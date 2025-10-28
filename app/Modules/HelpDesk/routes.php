@@ -18,9 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('tickets', TicketController::class);
 
     // Mensagens do ticket
-    Route::get('tickets/{ticket}/messages',        [TicketMessageController::class, 'index']);
-    Route::post('tickets/{ticket}/messages',        [TicketMessageController::class, 'store']);
-    Route::delete('tickets/{ticket}/messages/{message}', [TicketMessageController::class, 'destroy']);
+    Route::apiResource('tickets.messages',    TicketMessageController::class);
+
 
     // Tabelas auxiliares
     Route::apiResource('tickets-categories',    TicketCategoryController::class);

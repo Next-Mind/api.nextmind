@@ -2,101 +2,66 @@
 
 namespace App\Modules\HelpDesk\Http\Controllers;
 
-use App\Modules\HelpDesk\Models\Ticket;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Modules\HelpDesk\Models\Ticket;
+use App\Modules\HelpDesk\Http\Resources\TicketResource;
+use App\Modules\HelpDesk\Actions\Ticket\IndexTicketAction;
+use App\Modules\HelpDesk\Actions\Ticket\ShowTicketAction;
+use App\Modules\HelpDesk\Actions\Ticket\StoreTicketAction;
+use App\Modules\HelpDesk\Http\Requests\IndexTicketRequest;
+use App\Modules\HelpDesk\Http\Requests\StoreTicketRequest;
+use App\Modules\HelpDesk\Actions\Ticket\UpdateTicketAction;
+use App\Modules\HelpDesk\Http\Requests\UpdateTicketRequest;
 
 class TicketController extends Controller
 {
-    public function __construct() {}
-
     /**
      * GET /tickets
      */
-    public function index(Request $request)
+    public function index(IndexTicketRequest $request, IndexTicketAction $action)
     {
-        $user = $request->user();
-
-        // já está coberto pela policy->viewAny()
         Gate::authorize('viewAny', Ticket::class);
-
-        $query = Ticket::query();
-
-        // Se NÃO pode ver todos, limita aos próprios
-        if (! $user->can('helpdesk.tickets.view.any')) {
-            $query->where('user_id', $user->id);
-        }
-
-        // filtros básicos opcionais (status, categoria, etc.)
-        if ($statusId = $request->query('status_id')) {
-            $query->where('status_id', $statusId);
-        }
-
-        if ($categoryId = $request->query('category_id')) {
-            $query->where('category_id', $categoryId);
-        }
-
-        $tickets = $query
-            ->latest('created_at')
-            ->paginate($request->query('per_page', 15));
-
-        return response()->json($tickets);
+        $queryParams = $request->validatedWithDefaults();
+        $relations = $request->query("relations", []);
+        $tickets = $action->execute($queryParams, null, $relations);
+        return TicketResource::collection($tickets);
     }
 
     /**
      * POST /tickets
      */
-    public function store(Request $request)
+    public function store(StoreTicketRequest $request, StoreTicketAction $action)
     {
         Gate::authorize('create', Ticket::class);
-
-        // validação básica (ajuste depois)
-        $data = $request->validate([
-            'title'            => ['required', 'string', 'max:255'],
-            'description'      => ['required', 'string'],
-            'category_id'      => ['required', 'integer', 'exists:ticket_categories,id'],
-            'subcategory_id'   => ['nullable', 'integer', 'exists:ticket_subcategories,id'],
-            'status_id'        => ['required', 'integer', 'exists:ticket_statuses,id'],
-            // ... mais campos que existirem na sua migration tickets
-        ]);
-
-        $data['user_id'] = Auth::id();
-
-        $ticket = Ticket::create($data);
-
-        return response()->json($ticket, 201);
+        $data = $request->validated();
+        $data['opened_by_id'] = Auth::id();
+        $ticket = $action->execute($data);
+        return new TicketResource($ticket);
     }
 
     /**
      * GET /tickets/{ticket}
      */
-    public function show(Ticket $ticket)
+    public function show(Request $request, Ticket $ticket, ShowTicketAction $action)
     {
         Gate::authorize('view', $ticket);
-        return response()->json($ticket);
+        $relations = $request->query("relations", []);
+        $ticket = $action->execute($ticket, $relations);
+        return new TicketResource($ticket);
     }
 
     /**
      * PUT/PATCH /tickets/{ticket}
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(UpdateTicketRequest $request, Ticket $ticket, UpdateTicketAction $action)
     {
         Gate::authorize('update', $ticket);
-
-        $data = $request->validate([
-            'title'            => ['sometimes', 'string', 'max:255'],
-            'description'      => ['sometimes', 'string'],
-            'category_id'      => ['sometimes', 'integer', 'exists:ticket_categories,id'],
-            'subcategory_id'   => ['sometimes', 'integer', 'exists:ticket_subcategories,id'],
-            'status_id'        => ['sometimes', 'integer', 'exists:ticket_statuses,id'],
-            // etc.
-        ]);
-
-        $ticket->fill($data)->save();
-
-        return response()->json($ticket);
+        $data = $request->validated();
+        $ticket = $action->execute($data, $ticket);
+        return new TicketResource($ticket);
     }
 
     /**
@@ -105,11 +70,7 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket)
     {
         Gate::authorize('delete', $ticket);
-
         $ticket->delete();
-
-        return response()->json([
-            'message' => 'Ticket deleted',
-        ]);
+        return response()->noContent();
     }
 }
