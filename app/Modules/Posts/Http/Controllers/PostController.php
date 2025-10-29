@@ -8,98 +8,57 @@ use App\Modules\Posts\Http\Resources\PostResource;
 use App\Modules\Posts\Http\Requests\StorePostFormRequest;
 use App\Modules\Posts\Http\Resources\PostSummaryResource;
 use App\Modules\Posts\Http\Requests\UpdatePostFormRequest;
+use App\Modules\Posts\Actions\Post\IndexPostAction;
+use App\Modules\Posts\Actions\Post\ShowPostAction;
+use App\Modules\Posts\Actions\Post\StorePostAction;
+use App\Modules\Posts\Actions\Post\UpdatePostAction;
+use App\Modules\Posts\Actions\Post\DestroyPostAction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, IndexPostAction $action)
     {
         Gate::authorize('viewAny', Post::class);
 
-        $user    = $request->user();
-        $term    = trim((string) $request->input('search', ''));
-        $summary = $request->boolean('summary');
-
-        $query = Post::query();
-
-        if ($user?->can('posts.view.any') || $user?->can('posts.manage.any')) {
-        } elseif ($user?->can('posts.view.self')) {
-            $query->where(function ($q) use ($user) {
-                $q->where('visibility', Post::VISIBILITY_PUBLIC)
-                    ->orWhere('author_id', $user->getKey());
-            });
-        } else {
-            $query->where('visibility', Post::VISIBILITY_PUBLIC);
-        }
-
-        if ($term !== '') {
-            $like = "%{$term}%";
-            $query->where(function ($q) use ($like) {
-                $q->where('title', 'like', $like)
-                    ->orWhere('subtitle', 'like', $like)
-                    ->orWhereHas('author', fn($qa) => $qa->where('name', 'like', $like))
-                    ->orWhereHas('category', fn($qc) => $qc->where('name', 'like', $like));
-            });
-        }
-
-        if ($summary) {
-            $query->select([
-                'id',
-                'title',
-                'subtitle',
-                'image_url',
-                'author_id',
-                'post_category_id',
-                'visibility',
-                'created_at'
-            ])->with([
-                'author:id,name,photo_url',
-                'category:id,name,slug',
-            ]);
-        } else {
-            $query->with([
-                'author:id,name,photo_url',
-                'category:id,name,slug',
-                'author.psychologistProfile:user_id,id,speciality',
-            ]);
-        }
-
-        $posts = $query->latest()->simplePaginate(15);
+        $queryParams = $request->query();
+        $summary = (bool) ($queryParams['summary'] ?? false);
+        $posts = $action->execute($queryParams, $request->user());
         return $summary
             ? PostSummaryResource::collection($posts)
-            :  PostResource::collection($posts);
+            : PostResource::collection($posts);
     }
 
-    public function show(Request $request, Post $post)
+    public function show(Request $request, Post $post, ShowPostAction $action)
     {
         Gate::authorize("view", $post);
+        $post = $action->execute($post);
         return new PostResource($post);
     }
 
-    public function store(StorePostFormRequest $request)
+    public function store(StorePostFormRequest $request, StorePostAction $action)
     {
         $user = Auth::user();
         Gate::authorize('create', Post::class);
-        $input              = $request->validated();
-        $input['image_url'] = 'seila';
-        $post               = $user->posts()->create($input);
+        $input = $request->validated();
+        $post  = $action->execute($input, $user);
         return new PostResource($post);
     }
 
-    public function update(UpdatePostFormRequest $request, Post $post)
+    public function update(UpdatePostFormRequest $request, Post $post, UpdatePostAction $action)
     {
         Gate::authorize("update", $post);
         $input = $request->validated();
-        $post->update($input);
+        $post = $action->execute($input, $post);
         return new PostResource($post);
     }
 
-    public function destroy(Request $request, Post $post)
+    public function destroy(Request $request, Post $post, DestroyPostAction $action)
     {
         Gate::authorize("delete", $post);
-        $post->delete();
+        $action->execute($post);
         return response()->noContent();
     }
 }
