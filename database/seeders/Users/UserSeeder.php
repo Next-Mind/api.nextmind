@@ -33,7 +33,6 @@ class UserSeeder extends Seeder
             ->create();
         User::factory(20)
             ->asPsychologistWithProfileAndDocuments()
-            ->hasPosts(10)
             ->hasAddresses(2)
             ->hasPhones(2)
             ->has(
