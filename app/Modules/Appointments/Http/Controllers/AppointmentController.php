@@ -116,7 +116,7 @@ class AppointmentController extends Controller
             $appointment->delete();
         });
 
-        return response()->json(['deleted' => true]);;
+        return response()->json(['deleted' => true]);
     }
 
     public function book(StoreAppointmentRequest $request)
