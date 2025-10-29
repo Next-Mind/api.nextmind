@@ -69,15 +69,25 @@ class PermissionSeeder extends Seeder
             'admins.invite',
 
             //Help Desk Permissions
+
+            //Categories
             'helpdesk.categories.view.any',
             'helpdesk.categories.create',
             'helpdesk.categories.update',
             'helpdesk.categories.delete',
+
+            //Tickets
             'helpdesk.tickets.view.any',
             'helpdesk.tickets.view.self',
             'helpdesk.tickets.create',
             'helpdesk.tickets.update',
-            'helpdesk.tickets.delete'
+            'helpdesk.tickets.delete',
+
+            //Status
+            'helpdesk.status.view.any',
+            'helpdesk.status.create',
+            'helpdesk.status.update',
+            'helpdesk.status.delete'
         ];
 
         foreach ($permissions as $name) {

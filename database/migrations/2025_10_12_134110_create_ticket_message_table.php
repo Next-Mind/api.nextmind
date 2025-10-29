@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ticket_message', function (Blueprint $table) {
+        Schema::create('ticket_messages', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('ticket_id')
                 ->constrained('tickets')
