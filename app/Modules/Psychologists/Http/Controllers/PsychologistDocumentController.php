@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Storage;
 class PsychologistDocumentController extends Controller
 {
     /**
-     * Método responsável por realizar o upload dos documentos necessários para o cadastro de um novo psicólogo
+     * Método responsável por realizar o upload dos documentos necessários para o cadastro de um novo psicólogo,
+     * tanto no envio inicial quanto em novos envios quando o perfil foi rejeitado. Garante também que, ao
+     * reenviar documentos, o status e metadados de submissão do perfil sejam resetados para uma nova avaliação.
      * @param \App\Modules\Psychologists\Http\Requests\StorePsychologistDocumentRequest $request
      * @throws \App\Modules\Psychologists\Exceptions\PsychologistProfileNotEligibleForDocumentSubmissionException
      * @return \Illuminate\Http\JsonResponse
