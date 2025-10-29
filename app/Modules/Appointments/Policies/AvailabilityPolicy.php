@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Modules\Appointments\Policies\Appointments;
+namespace App\Modules\Appointments\Policies;
 
 use App\Modules\Appointments\Models\Availability;
 use App\Modules\Users\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class AvailabilityPolicy
 {
