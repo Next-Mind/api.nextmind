@@ -87,7 +87,7 @@ class PsychologistDocumentController extends Controller
     /**
      * Método responsável por retornar um arquivo obrigatório de psicólogo
      * @param \Illuminate\Http\Request $request
-     * @param \App\Modules\Psychologists\Models\Users\PsychologistDocument $document
+     * @param \App\Modules\Psychologists\Models\PsychologistDocument $document
      * @throws \App\Modules\Psychologists\Exceptions\UnauthorizedActionException
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */

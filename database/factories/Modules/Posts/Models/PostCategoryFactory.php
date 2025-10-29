@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Modules\Posts\Models;
 
+use Illuminate\Support\Str;
 use App\Modules\Posts\Models\PostCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,8 +21,10 @@ class PostCategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->unique()->words(rand(1, 3), true);
         return [
-            'name' => fake()->word()
+            'name' => $name,
+            'slug' => Str::slug($name),
         ];
     }
 }

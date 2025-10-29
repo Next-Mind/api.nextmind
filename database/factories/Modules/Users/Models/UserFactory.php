@@ -2,13 +2,16 @@
 
 namespace Database\Factories\Modules\Users\Models;
 
+use Illuminate\Support\Str;
+use App\Modules\Posts\Models\Post;
 use App\Modules\Users\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Modules\Users\Models\UserFile;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Modules\Psychologists\Models\PsychologistProfile;
 use App\Modules\Psychologists\Models\PsychologistDocument;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Database\Factories\Modules\Psychologists\Models\PsychologistProfileFactory;
+use Database\Factories\Modules\Psychologists\Models\PsychologistDocumentFactory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Modules\Users\Models\User>
@@ -88,22 +91,40 @@ class UserFactory extends Factory
     return $this->withPsychologistRole()
       ->afterCreating(function (User $user) {
 
-        $profile = PsychologistProfile::factory()->for($user)->create();
+        $isApproved = (bool) random_int(0, 1);
+
+        $profileFactory = PsychologistProfileFactory::new()
+          ->for($user, 'user');
+
+        $profile = $isApproved
+          ? $profileFactory->approved()->create()
+          : $profileFactory->pending()->create();
 
         $types = ['crp_card', 'id_front', 'id_back', 'proof_of_address'];
 
         foreach ($types as $type) {
-          PsychologistDocument::factory()
-            ->for($profile, 'psychologistOwner')
+
+          $docFactory = PsychologistDocumentFactory::new()
+            ->forProfile($profile)
             ->type($type)
-            ->for(
-              UserFile::factory()
-                ->forOwner($user)
-                ->pdfNamed($type . '.pdf'),
-              'userFile'
-            )
-            ->create();
+            ->withFileForOwner($user);
+
+          if ($isApproved) {
+            $docFactory->approvedDoc()->create();
+          } else {
+            $docFactory->pending()->create();
+          }
         }
+
+        if (!$isApproved) {
+          return;
+        }
+
+        Post::factory()
+          ->count(10)
+          ->create([
+            'author_id' => $user->getKey(),
+          ]);
       });
   }
 }
