@@ -2,7 +2,7 @@
 
 namespace App\Modules\HelpDesk\Actions\Ticket;
 
-use App\Models\User;
+use App\Modules\Users\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Modules\HelpDesk\Models\Ticket;
 use App\Modules\HelpDesk\Models\TicketStatus;
