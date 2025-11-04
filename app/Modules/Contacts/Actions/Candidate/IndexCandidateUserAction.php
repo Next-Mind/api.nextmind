@@ -2,6 +2,7 @@
 
 namespace App\Modules\Contacts\Actions\Candidate;
 
+use App\Modules\Contacts\Models\Contact;
 use App\Modules\Users\Models\User;
 
 class IndexCandidateUserAction
@@ -22,6 +23,11 @@ class IndexCandidateUserAction
         }
 
         $query->where('id', '!=', $requester->getKey());
+
+        $query->whereNotIn('id', Contact::query()
+            ->select('contact_id')
+            ->where('owner_id', $requester->getKey())
+        );
 
         if ($term !== '') {
             $like = "%{$term}%";
