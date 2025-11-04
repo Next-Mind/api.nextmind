@@ -53,7 +53,16 @@ class RoleHasPermissionSeeder extends Seeder
             'helpdesk.status.view.any',
             'helpdesk.status.create',
             'helpdesk.status.update',
-            'helpdesk.status.delete'
+            'helpdesk.status.delete',
+
+            // Contacts
+            'contacts.view.self',
+            'contacts.view.any',
+            'contacts.create.self',
+            'contacts.delete.self',
+            'contacts.manage.any',
+            'contacts.candidates.browse.psychologists',
+            'contacts.candidates.browse.any',
         ]);
     }
 
@@ -88,6 +97,12 @@ class RoleHasPermissionSeeder extends Seeder
 
             'helpdesk.status.view.any',
 
+            // Contacts
+            'contacts.view.self',
+            'contacts.create.self',
+            'contacts.delete.self',
+            'contacts.candidates.browse.any'
+
         ]);
     }
 
@@ -112,6 +127,12 @@ class RoleHasPermissionSeeder extends Seeder
             'helpdesk.tickets.create',
 
             'helpdesk.status.view.any',
+
+            // Contacts
+            'contacts.view.self',
+            'contacts.create.self',
+            'contacts.delete.self',
+            'contacts.candidates.browse.psychologists'
         ]);
     }
 
