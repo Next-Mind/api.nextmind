@@ -19,7 +19,12 @@ class ContactController extends Controller
     public function index(Request $request, IndexContactAction $action)
     {
         Gate::authorize('viewAny', Contact::class);
+
+        /**
+         * @var User
+         */
         $owner = $request->user();
+
         $contacts = $action->execute($owner);
         return ContactResource::collection($contacts);
     }
@@ -33,8 +38,13 @@ class ContactController extends Controller
     public function store(StoreContactRequest $request, StoreContactAction $action)
     {
         Gate::authorize('create', Contact::class);
+
+        /**
+         * @var User
+         */
         $owner = $request->user();
         // Permission guard for browsing candidates according to role
+
         if ($owner->hasRole('student')) {
             abort_unless($owner->can('contacts.candidates.browse.psychologists'), 403);
         } elseif ($owner->hasRole('psychologist')) {
@@ -54,7 +64,12 @@ class ContactController extends Controller
     public function destroy(Request $request, Contact $contact, DestroyContactAction $action)
     {
         Gate::authorize('delete', $contact);
+
+        /**
+         * @var User
+         */
         $owner = $request->user();
+
         $action->execute($owner, $contact);
         return response()->noContent();
     }

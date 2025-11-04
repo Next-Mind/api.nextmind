@@ -56,9 +56,13 @@ class RoleHasPermissionSeeder extends Seeder
             'helpdesk.status.delete',
 
             // Contacts
+            'contacts.view.self',
             'contacts.view.any',
+            'contacts.create.self',
+            'contacts.delete.self',
             'contacts.manage.any',
-            'contacts.candidates.browse.any'
+            'contacts.candidates.browse.psychologists',
+            'contacts.candidates.browse.any',
         ]);
     }
 

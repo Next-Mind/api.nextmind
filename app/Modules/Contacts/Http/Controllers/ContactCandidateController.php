@@ -6,13 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Modules\Contacts\Actions\Candidate\IndexCandidateUserAction;
+use App\Modules\Users\Models\User;
 
 class ContactCandidateController extends Controller
 {
     public function index(Request $request, IndexCandidateUserAction $action)
     {
         Gate::authorize('viewAny', \App\Modules\Contacts\Models\Contact::class);
+
+        /**
+         * @var User
+         */
         $user = $request->user();
+
         if ($user->hasRole('student')) {
             abort_unless($user->can('contacts.candidates.browse.psychologists'), 403);
         } elseif ($user->hasRole('psychologist')) {
