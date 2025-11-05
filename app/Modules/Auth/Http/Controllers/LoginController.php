@@ -3,6 +3,7 @@
 namespace App\Modules\Auth\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Audits\Services\AuditLogger;
 use App\Modules\Users\Http\Resources\UserResource;
 use App\Modules\Auth\Http\Requests\LoginFormRequest;
 use App\Modules\Auth\Exceptions\InvalidAuthenticationException;
@@ -10,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    public function __construct(private readonly AuditLogger $auditLogger)
+    {
+    }
+
     /**
      * Handle the incoming request.
      */
@@ -25,6 +30,14 @@ class LoginController extends Controller
 
         /** @var \Illuminate\Http\Request $request */
         $platform = $request->attributes->get('client');
+
+        $this->auditLogger->record(
+            $user,
+            'users.logged_in',
+            null,
+            null,
+            ['client' => $platform]
+        );
 
         if ($platform === 'spa') {
             $request->session()->regenerate();
