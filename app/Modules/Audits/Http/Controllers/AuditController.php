@@ -46,10 +46,10 @@ class AuditController extends Controller
     {
         $perPage = $this->resolvePerPage($request->integer('per_page'));
 
-        $auditableType = $this->resolveAuditableType($type);
+        $auditableTypes = $this->resolveAuditableType($type);
 
         $audits = Audit::query()
-            ->where('auditable_type', $auditableType)
+            ->whereIn('auditable_type', $auditableTypes)
             ->where('auditable_id', $id)
             ->latest('created_at')
             ->paginate($perPage);
@@ -66,22 +66,49 @@ class AuditController extends Controller
         return min($perPage, self::MAX_PER_PAGE);
     }
 
-    private function resolveAuditableType(string $type): string
+    private function resolveAuditableType(string $type): array
     {
         $normalized = strtolower($type);
+        $resolvedTypes = [];
+
+        $appendResolvedTypes = static function (string $class, string ...$aliases) use (&$resolvedTypes): void {
+            $resolvedTypes[] = $class;
+
+            foreach ($aliases as $alias) {
+                if ($alias !== '') {
+                    $resolvedTypes[] = $alias;
+                }
+            }
+
+            $morphAlias = Relation::getMorphAlias($class);
+            if ($morphAlias !== null) {
+                $resolvedTypes[] = $morphAlias;
+            }
+        };
 
         if (array_key_exists($normalized, self::AUDITABLE_TYPES)) {
-            return self::AUDITABLE_TYPES[$normalized];
+            $class = self::AUDITABLE_TYPES[$normalized];
+            $appendResolvedTypes($class, $normalized, $type !== $normalized ? $type : '');
+
+            return array_values(array_unique($resolvedTypes));
         }
 
-        $morphed = Relation::getMorphedModel($type);
+        $morphed = Relation::getMorphedModel($normalized);
+
+        if ($morphed === null) {
+            $morphed = Relation::getMorphedModel($type);
+        }
 
         if ($morphed !== null) {
-            return $morphed;
+            $appendResolvedTypes($morphed, $normalized, $type !== $normalized ? $type : '');
+
+            return array_values(array_unique($resolvedTypes));
         }
 
         if (class_exists($type)) {
-            return $type;
+            $appendResolvedTypes($type, $normalized, $type !== $normalized ? $type : '');
+
+            return array_values(array_unique($resolvedTypes));
         }
 
         abort(404, 'Auditable type not supported.');
