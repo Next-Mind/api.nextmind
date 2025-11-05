@@ -4,12 +4,12 @@ namespace App\Modules\Audits\Observers;
 
 use App\Modules\Audits\Services\AuditLogger;
 use App\Modules\Users\Models\User;
-use DateTimeInterface;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
 
 class UserObserver
 {
+    use AuditValueNormalizer;
+
     private const AUDITABLE_ATTRIBUTES = [
         'name',
         'email',
@@ -79,52 +79,5 @@ class UserObserver
             $this->normalizeValues(['email_verified_at' => $old]),
             $this->normalizeValues(['email_verified_at' => $new])
         );
-    }
-
-    private function extractValues(array $attributes): ?array
-    {
-        $values = Arr::only($attributes, self::AUDITABLE_ATTRIBUTES);
-
-        return $this->normalizeValues($values);
-    }
-
-    private function normalizeValues(?array $values): ?array
-    {
-        if ($values === null) {
-            return null;
-        }
-
-        $normalized = [];
-
-        foreach ($values as $key => $value) {
-            $normalizedValue = $this->normalizeValue($key, $value);
-
-            if ($normalizedValue !== null || array_key_exists($key, $values)) {
-                $normalized[$key] = $normalizedValue;
-            }
-        }
-
-        return empty($normalized) ? null : $normalized;
-    }
-
-    private function normalizeValue(string $key, mixed $value): mixed
-    {
-        if ($value instanceof DateTimeInterface) {
-            return $value->format(DateTimeInterface::ATOM);
-        }
-
-        if ($value === null || $value === '') {
-            return $value;
-        }
-
-        if (is_string($value) && in_array($key, self::DATE_ATTRIBUTES, true)) {
-            return Carbon::parse($value)->format(DateTimeInterface::ATOM);
-        }
-
-        if ($value instanceof \Stringable) {
-            return (string) $value;
-        }
-
-        return $value;
     }
 }
