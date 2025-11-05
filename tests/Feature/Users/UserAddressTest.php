@@ -1,7 +1,7 @@
 <?php
 
 use App\Modules\Users\Models\User;
-use App\Modules\Users\Models\User;s\UserAddress;
+use App\Modules\Users\Models\UserAddress;
 
 beforeEach(function () {
     // Usuários com roles

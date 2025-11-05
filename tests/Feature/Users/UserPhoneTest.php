@@ -1,7 +1,7 @@
 <?php
 
 use App\Modules\Users\Models\User;
-use App\Modules\Users\Models\User;s\UserPhone;
+use App\Modules\Users\Models\UserPhone;
 
 beforeEach(function () {
     $this->studentA = User::factory()->withStudentRole()->create();
