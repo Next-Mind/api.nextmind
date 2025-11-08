@@ -36,6 +36,7 @@ class AuditController extends Controller
         $perPage = $this->resolvePerPage($request->integer('per_page'));
 
         $audits = Audit::query()
+            ->with('user')
             ->latest('created_at')
             ->paginate($perPage);
 
@@ -49,7 +50,8 @@ class AuditController extends Controller
         $auditableTypes = $this->resolveAuditableType($type);
 
         $audits = Audit::query()
-            ->whereIn('auditable_type', $auditableTypes)
+            ->with('user')
+            ->where('auditable_type', $auditableType)
             ->where('auditable_id', $id)
             ->latest('created_at')
             ->paginate($perPage);
