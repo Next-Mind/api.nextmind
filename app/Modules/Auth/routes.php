@@ -1,6 +1,5 @@
 <?php
 
-use App\Modules\Auth\Http\Controllers\LoginController;
 use App\Modules\Auth\Http\Controllers\AuthGoogleTokenController;
 use App\Modules\Auth\Http\Controllers\EmailVerificationController;
 use App\Modules\Psychologists\Http\Controllers\PsychologistDocumentController;
@@ -20,12 +19,6 @@ Route::prefix('/auth')->group(function () {
     //utilizada para atribuir um nome ao token Sanctum que será gerado.
     Route::post('google/token', AuthGoogleTokenController::class)->middleware('ensureClientHeader');
 });
-
-/**
- * Rotas de autenticação SPA/Desktop
- */
-Route::post('login', LoginController::class)->middleware('ensureClientHeader');
-
 
 /**
  * Rotas de registro de novos psicólogos

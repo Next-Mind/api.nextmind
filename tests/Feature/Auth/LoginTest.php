@@ -16,7 +16,7 @@ class LoginTest extends TestCase
             'password' => bcrypt('Password123'),
         ]);
 
-        $response = $this->withHeader('X-Client', 'spa')->postJson('/login', [
+        $response = $this->withHeader('X-Client', 'spa')->postJson('/login/web', [
             'email' => $user->email,
             'password' => 'Password123',
         ]);
@@ -69,5 +69,26 @@ class LoginTest extends TestCase
             'name' => 'desktop',
             'tokenable_id' => $user->id,
         ]);
+    }
+
+    public function test_stateless_login_removes_existing_session_cookie(): void
+    {
+        $user = User::factory()->create([
+            'password' => bcrypt('Password123'),
+        ]);
+
+        $cookieName = config('session.cookie');
+
+        $response = $this
+            ->withHeader('X-Client', 'mobile')
+            ->withCookie($cookieName, 'existing-session')
+            ->postJson('/login', [
+                'email' => $user->email,
+                'password' => 'Password123',
+            ]);
+
+        $response->assertOk();
+        $response->assertJsonPath('token', fn ($token) => is_string($token) && $token !== '');
+        $response->assertCookieExpired($cookieName);
     }
 }

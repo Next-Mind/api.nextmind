@@ -1,11 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Modules\Auth\Http\Controllers\LoginController;
 use App\Modules\Auth\Http\Controllers\AuthGoogleWebClientController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::middleware('ensureClientHeader')
+    ->withoutMiddleware(['web'])
+    ->post('/login', [LoginController::class, 'loginStateless'])
+    ->name('login.stateless');
+
+Route::middleware('ensureClientHeader')
+    ->post('/login/web', [LoginController::class, 'loginStateful'])
+    ->name('login.stateful');
 
 
 Route::prefix('/auth')->group(function () {
