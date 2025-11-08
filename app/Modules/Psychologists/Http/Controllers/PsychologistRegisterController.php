@@ -7,7 +7,6 @@ use App\Modules\Users\Models\User;
 use App\Modules\Users\Http\Resources\UserResource;
 use App\Modules\Psychologists\Http\Requests\PsychologistRegisterFormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request as FacadeRequest;
 
 class PsychologistRegisterController extends Controller
 {
@@ -49,13 +48,14 @@ class PsychologistRegisterController extends Controller
         //Carrega o perfil para o front
         $user->load('psychologistProfile');
 
-        /** @var \Illuminate\Http\Request $request */
         $platform = $request->attributes->get('client', 'spa');
 
         if ($platform === 'spa') {
             //Faz o login para o SPA
             Auth::login($user);
-            FacadeRequest::session()->regenerate();
+            if ($request->hasSession() && $request->session()->isStarted()) {
+                $request->session()->regenerate();
+            }
         } else {
             // Garante que nenhuma sessão permaneça ativa para clientes stateless
             Auth::guard('web')->logout();
