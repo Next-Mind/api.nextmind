@@ -15,11 +15,19 @@ return [
     |
     */
 
-    'paths' => ['/*', 'sanctum/csrf-cookie'],
+    'paths' => [
+        '*',                    
+        'sanctum/csrf-cookie',  
+        'login',
+        'logout',
+    ],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'https://painel.nextmind.sbs',  
+        'http://localhost:5173',        
+    ],
 
     'allowed_origins_patterns' => [],
 
