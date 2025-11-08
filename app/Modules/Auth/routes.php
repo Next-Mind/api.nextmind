@@ -23,7 +23,10 @@ Route::prefix('/auth')->group(function () {
 /**
  * Rotas de registro de novos psicólogos
  */
-Route::post('register/psychologist', PsychologistRegisterController::class)->middleware('ensureClientHeader');
+Route::middleware('ensureClientHeader')->group(function () {
+    Route::post('register/psychologist', PsychologistRegisterController::class)
+        ->middleware('ensureSpaSession');
+});
 
 Route::post('register/psychologist/upload', [PsychologistDocumentController::class, 'store'])
     ->middleware('auth:sanctum');
