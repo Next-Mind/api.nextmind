@@ -4,6 +4,7 @@ namespace App\Modules\Audits\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Modules\Users\Http\Resources\UserSummaryResource;
 
 class AuditResource extends JsonResource
 {
@@ -20,7 +21,7 @@ class AuditResource extends JsonResource
             'auditable_type' => $this->auditable_type,
             'auditable_id' => $this->auditable_id,
             'user_type' => $this->user_type,
-            'user_id' => $this->user_id,
+            'user' => UserSummaryResource::make($this->whenLoaded('user')),
             'old_values' => $this->old_values,
             'new_values' => $this->new_values,
             'extra' => $this->extra,
