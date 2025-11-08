@@ -49,9 +49,21 @@ class PsychologistRegisterController extends Controller
         //Carrega o perfil para o front
         $user->load('psychologistProfile');
 
-        //Faz o login para o SPA
-        Auth::login($user);
-        FacadeRequest::session()->regenerate();
+        /** @var \Illuminate\Http\Request $request */
+        $platform = $request->attributes->get('client', 'spa');
+
+        if ($platform === 'spa') {
+            //Faz o login para o SPA
+            Auth::login($user);
+            FacadeRequest::session()->regenerate();
+        } else {
+            // Garante que nenhuma sessão permaneça ativa para clientes stateless
+            Auth::guard('web')->logout();
+
+            if ($request->hasSession() && $request->session()->isStarted()) {
+                $request->session()->invalidate();
+            }
+        }
 
         return new UserResource($user);
     }

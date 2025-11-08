@@ -20,16 +20,34 @@ class LoginController extends Controller
      */
     public function __invoke(LoginFormRequest $request)
     {
-        $input = $request->only('email', 'password');
-
-        if (!Auth::attempt($input)) {
-            throw new InvalidAuthenticationException();
-        }
-
-        $user = Auth::user();
+        $credentials = $request->only('email', 'password');
 
         /** @var \Illuminate\Http\Request $request */
-        $platform = $request->attributes->get('client');
+        $platform = $request->attributes->get('client', 'spa');
+
+        if ($platform === 'spa') {
+            if (!Auth::attempt($credentials)) {
+                throw new InvalidAuthenticationException();
+            }
+
+            $user = Auth::user();
+            $request->session()->regenerate();
+        } else {
+            $guard = Auth::guard('web');
+
+            if (!$guard->once($credentials)) {
+                throw new InvalidAuthenticationException();
+            }
+
+            $user = $guard->user();
+
+            // Garantir que nenhuma sessão fique ativa para clientes stateless
+            $guard->logout();
+
+            if ($request->hasSession() && $request->session()->isStarted()) {
+                $request->session()->invalidate();
+            }
+        }
 
         $this->auditLogger->record(
             $user,
@@ -40,7 +58,6 @@ class LoginController extends Controller
         );
 
         if ($platform === 'spa') {
-            $request->session()->regenerate();
             return new UserResource($user);
         }
 
