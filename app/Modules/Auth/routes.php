@@ -30,7 +30,7 @@ Route::post('login', LoginController::class)->middleware('ensureClientHeader');
 /**
  * Rotas de registro de novos psicólogos
  */
-Route::post('register/psychologist', PsychologistRegisterController::class);
+Route::post('register/psychologist', PsychologistRegisterController::class)->middleware('ensureClientHeader');
 
 Route::post('register/psychologist/upload', [PsychologistDocumentController::class, 'store'])
     ->middleware('auth:sanctum');
