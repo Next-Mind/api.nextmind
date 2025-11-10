@@ -19,18 +19,18 @@ class StoreAppointmentRequest extends FormRequest
             'availability_id' => [
                 'required',
                 'uuid',
-                Rule::exists('availabilities', 'id'),
-                Rule::unique('appointments', 'availability_id'),
+                Rule::exists('availabilities', 'id')->where(fn ($query) => $query->whereNull('deleted_at')),
+                Rule::unique('appointments', 'availability_id')->where(fn ($query) => $query->whereNull('deleted_at')),
             ],
             'psychologist_id' => [
                 'required',
                 'uuid',
-                Rule::exists('users', 'id'),
+                Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at')),
             ],
             'user_id' => [
                 'nullable',
                 'uuid',
-                Rule::exists('users', 'id'),
+                Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at')),
             ],
             'description' => ['nullable', 'string', 'max:5000'],
             'status' => ['nullable', Rule::in(['pending', 'scheduled', 'completed', 'canceled', 'no_show'])],

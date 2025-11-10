@@ -25,15 +25,25 @@ class UserPhoneController extends Controller
         //RECUPERANDO CAMPOS VALIDADOS DA REQUISIÇÃO
         $input = $request->validated();
 
-        //VERIFICANDO SE JÁ EXISTE UM REGISTRO IGUAL NO BANCO
-        $exists = UserPhone::where([
+        $existing = UserPhone::withTrashed()->where([
             'country_code' => $input['country_code'],
             'area_code' => $input['area_code'],
             'number' => $input['number'],
-        ])->exists();
+        ])->first();
 
-        if ($exists) {
-            throw new UserPhoneAlreadyRegisteredException();
+        if ($existing) {
+            if (! $existing->trashed()) {
+                throw new UserPhoneAlreadyRegisteredException();
+            }
+
+            $existing->forceFill(array_merge($input, [
+                'user_id' => $user->getKey(),
+            ]));
+
+            $existing->restore();
+            $existing->save();
+
+            return new UserPhoneResource($existing->refresh());
         }
 
         //INICIANDO BLOCO DE CADASTRO DO NOVO TELEFONE

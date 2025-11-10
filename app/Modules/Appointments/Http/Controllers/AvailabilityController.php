@@ -55,6 +55,30 @@ class AvailabilityController extends Controller
             $dt = \Carbon\Carbon::parse($raw)->seconds(0);
 
             try {
+                $existing = Availability::withTrashed()
+                    ->where('user_id', $user->id)
+                    ->where('date_availability', $dt)
+                    ->first();
+
+                if ($existing) {
+                    if ($existing->trashed()) {
+                        $existing->forceFill([
+                            'status' => AvailabilityStatus::Available,
+                            'reserved_by' => null,
+                            'scheduled_by' => null,
+                        ]);
+
+                        $existing->restore();
+                        $existing->save();
+
+                        $saved[] = $dt->toDateTimeString();
+                        continue;
+                    }
+
+                    $skipped[] = $dt->toDateTimeString();
+                    continue;
+                }
+
                 Availability::query()->create([
                     'user_id' => $user->id,
                     'date_availability'            => $dt,

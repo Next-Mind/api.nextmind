@@ -20,13 +20,13 @@ class UpdateTicketRequest extends FormRequest
 
             'subject'               => ['sometimes', 'string', 'max:255'],
 
-            'opened_by_id'          => ['sometimes', 'nullable', 'string', 'size:36', 'exists:users,id'],
-            'requester_id'          => ['sometimes', 'nullable', 'string', 'size:36', 'exists:users,id'],
-            'assigned_to_id'        => ['sometimes', 'nullable', 'string', 'size:36', 'exists:users,id'],
+            'opened_by_id'          => ['sometimes', 'nullable', 'string', 'size:36', Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'requester_id'          => ['sometimes', 'nullable', 'string', 'size:36', Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'assigned_to_id'        => ['sometimes', 'nullable', 'string', 'size:36', Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
 
-            'ticket_category_id'    => ['sometimes', 'string', 'size:36', 'exists:ticket_categories,id'],
-            'ticket_subcategory_id' => ['sometimes', 'nullable', 'string', 'size:36', 'exists:ticket_subcategories,id'],
-            'ticket_status_id'      => ['sometimes', 'string', 'size:36', 'exists:ticket_statuses,id'],
+            'ticket_category_id'    => ['sometimes', 'string', 'size:36', Rule::exists('ticket_categories', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'ticket_subcategory_id' => ['sometimes', 'nullable', 'string', 'size:36', Rule::exists('ticket_subcategories', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'ticket_status_id'      => ['sometimes', 'string', 'size:36', Rule::exists('ticket_statuses', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
 
             'first_response_due_at' => ['sometimes', 'nullable', 'date'],
             'resolution_due_at'     => ['sometimes', 'nullable', 'date'],

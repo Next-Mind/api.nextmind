@@ -14,11 +14,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasUuids, HasRoles, HasApiTokens, HasFactory, Notifiable;
+    use HasUuids, HasRoles, HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
 
     /**
@@ -61,12 +62,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function psychologistProfile()
     {
-        return $this->hasOne(PsychologistProfile::class);
+        return $this->hasOne(PsychologistProfile::class)->withTrashed();
     }
 
     public function studentProfile()
     {
-        return $this->hasOne(StudentProfile::class);
+        return $this->hasOne(StudentProfile::class)->withTrashed();
     }
 
     public function addresses()
