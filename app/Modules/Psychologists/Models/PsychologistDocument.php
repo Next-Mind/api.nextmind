@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Modules\Users\Models\UserFile;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PsychologistDocument extends Model
 {
-    use HasUuids, HasFactory;
+    use HasUuids, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'psychologist_profile_id',
@@ -26,16 +27,16 @@ class PsychologistDocument extends Model
 
     public function psychologistOwner()
     {
-        return $this->belongsTo(PsychologistProfile::class, 'psychologist_profile_id');
+        return $this->belongsTo(PsychologistProfile::class, 'psychologist_profile_id')->withTrashed();
     }
 
     public function reviewer()
     {
-        return $this->belongsTo(User::class, 'reviewed_by');
+        return $this->belongsTo(User::class, 'reviewed_by')->withTrashed();
     }
 
     public function userFile()
     {
-        return $this->BelongsTo(UserFile::class, 'user_file_id');
+        return $this->belongsTo(UserFile::class, 'user_file_id')->withTrashed();
     }
 }

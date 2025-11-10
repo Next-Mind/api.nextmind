@@ -6,27 +6,28 @@ use App\Modules\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Appointment extends Model
 {
-    use HasUuids, HasFactory;
+    use HasUuids, HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
     public function availability()
     {
-        return $this->belongsTo(Availability::class, 'availability_id');
+        return $this->belongsTo(Availability::class, 'availability_id')->withTrashed();
     }
 
     public function patient()
     {
         // nome mais explícito para user_id
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
     public function psychologist()
     {
-        return $this->belongsTo(User::class, 'psychologist_id');
+        return $this->belongsTo(User::class, 'psychologist_id')->withTrashed();
     }
     public function scopeOfPsychologist($query, string $psychologistId)
     {

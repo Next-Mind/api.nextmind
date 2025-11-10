@@ -5,6 +5,7 @@ namespace App\Modules\HelpDesk\Http\Requests;
 use App\Modules\HelpDesk\Models\Ticket;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTicketRequest extends FormRequest
 {
@@ -18,13 +19,13 @@ class StoreTicketRequest extends FormRequest
         return [
             'subject'               => ['required', 'string', 'max:255'],
 
-            'opened_by_id'          => ['nullable', 'string', 'size:36', 'exists:users,id'],
-            'requester_id'          => ['nullable', 'string', 'size:36', 'exists:users,id'],
-            'assigned_to_id'        => ['nullable', 'string', 'size:36', 'exists:users,id'],
+            'opened_by_id'          => ['nullable', 'string', 'size:36', Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'requester_id'          => ['nullable', 'string', 'size:36', Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'assigned_to_id'        => ['nullable', 'string', 'size:36', Rule::exists('users', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
 
-            'ticket_category_id'    => ['required', 'string', 'size:36', 'exists:ticket_categories,id'],
-            'ticket_subcategory_id' => ['required', 'string', 'size:36', 'exists:ticket_subcategories,id'],
-            'ticket_status_id'      => ['nullable', 'string', 'size:36', 'exists:ticket_statuses,id'],
+            'ticket_category_id'    => ['required', 'string', 'size:36', Rule::exists('ticket_categories', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'ticket_subcategory_id' => ['required', 'string', 'size:36', Rule::exists('ticket_subcategories', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
+            'ticket_status_id'      => ['nullable', 'string', 'size:36', Rule::exists('ticket_statuses', 'id')->where(fn ($query) => $query->whereNull('deleted_at'))],
 
             'first_response_due_at' => ['nullable', 'date'],
             'resolution_due_at'     => ['nullable', 'date'],

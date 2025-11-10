@@ -14,6 +14,10 @@ class ContactResource extends JsonResource
             'owner_id'   => $this->owner_id,
             'contact_id' => $this->contact_id,
             'contact'    => $this->whenLoaded('contactUser', function () {
+                if (! $this->contactUser) {
+                    return null;
+                }
+
                 return [
                     'id' => $this->contactUser->id,
                     'name' => $this->contactUser->name,

@@ -5,10 +5,11 @@ namespace App\Modules\AdminInvites\Models;
 use App\Modules\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdminInvitation extends Model
 {
-    use HasUuids;
+    use HasUuids, SoftDeletes;
 
     protected $fillable = [
         'id',
@@ -28,7 +29,7 @@ class AdminInvitation extends Model
 
     public function inviter()
     {
-        return $this->belongsTo(User::class, 'invited_by');
+        return $this->belongsTo(User::class, 'invited_by')->withTrashed();
     }
 
     public function getIsExpiredAttribute()
