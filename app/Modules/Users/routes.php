@@ -11,6 +11,7 @@ use App\Modules\Users\Http\Controllers\UserAddressController;
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('users/me', [MeController::class, 'show'])->middleware('auth:sanctum')->name('users.me');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('users/{user}/basic', [UserController::class, 'showBasic'])->name('users.basic');
 
     //CRUD DE TELEFONES DO USUÁRIO
