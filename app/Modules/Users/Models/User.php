@@ -79,6 +79,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserPhone::class);
     }
 
+    public function primaryPhone()
+    {
+        return $this->hasOne(UserPhone::class)->where('is_primary', true);
+    }
+
     public function files()
     {
         return $this->hasMany(UserFile::class);
