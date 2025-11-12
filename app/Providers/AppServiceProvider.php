@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage)
                 ->subject('Verifique seu e-mail')
-                ->markdown('emails.verifyEmail', ['url' => $url, 'user' => $notifiable]);
+                ->markdown('auth::emails.verifyEmail', ['url' => $url, 'user' => $notifiable]);
         });
 
         PsychologistProfile::observe(PsychologistProfileObserver::class);
